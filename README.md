@@ -30,6 +30,10 @@ criteria. Machine contracts remain in `skenion-contracts`.
 - [Render And GPU](docs/model/render-and-gpu.md)
 - [Domain Crossing](docs/model/domain-crossing.md)
 - [Object Layer](docs/model/object-layer.md)
+- [Pd Baseline Matrix](docs/model/pd-baseline-matrix.md)
+- [Object Text Parser](docs/model/object-text-parser.md)
+- [Control Operators](docs/model/control-operators.md)
+- [Audio DSP Model](docs/model/audio-dsp-model.md)
 - [Expression Layer](docs/model/expression-layer.md)
 - [Pure Data Notes](docs/references/pure-data-notes.md)
 
