@@ -17,3 +17,7 @@ to line up with Studio and Runtime.
 
 For the M06.75 graph v0.2 foundation, read [Subpatches](model/subpatches.md),
 [Live Help](model/live-help.md), and [Graph Fragments](model/graph-fragments.md).
+
+For Runtime session behavior, read
+[Desktop Runtime Sessions](model/desktop-runtime-sessions.md) and
+[Realtime Collaborative Editing](model/realtime-collaboration.md).
