@@ -13,3 +13,7 @@ The M06.75 foundation adds Manual coverage for graph v0.2 subpatches, live
 help, and graph fragments. Start with [Subpatches](model/subpatches.md),
 [Live Help](model/live-help.md), and
 [Graph Fragments](model/graph-fragments.md).
+
+Runtime session coverage includes
+[Desktop Runtime Sessions](model/desktop-runtime-sessions.md) and
+[Realtime Collaborative Editing](model/realtime-collaboration.md).

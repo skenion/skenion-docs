@@ -31,7 +31,8 @@ const manualSidebar = [
     label: "Runtime Sessions",
     collapsed: false,
     items: [
-      "model/desktop-runtime-sessions"
+      "model/desktop-runtime-sessions",
+      "model/realtime-collaboration"
     ]
   },
   {
