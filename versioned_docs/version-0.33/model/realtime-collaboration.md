@@ -7,7 +7,8 @@ sidebar_position: 7
 
 Realtime collaboration is coordinated by Runtime. Studio windows may show local
 optimistic updates, cursors, selections, and inspector state, but the accepted
-graph document belongs to the Runtime session.
+graph document belongs to the Runtime session. Active collaboration targets use
+the v0.2 model described in [Graph v0.2 Cutover](./graph-v02-cutover.md).
 
 ## Runtime Session Authority
 

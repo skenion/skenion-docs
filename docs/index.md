@@ -15,7 +15,11 @@ semantics, then use [Object Layer](model/object-layer.md) and
 [Object Text Parser](model/object-text-parser.md) when authoring behavior needs
 to line up with Studio and Runtime.
 
-For the M06.75 graph v0.2 foundation, read [Subpatches](model/subpatches.md),
+For the active graph model, start with
+[Graph v0.2 Cutover](model/graph-v02-cutover.md). It explains that
+`ProjectDocumentV02`, patch libraries, live help, graph fragments, and Runtime
+graph targets are active v0.2 surfaces, while v0.1 remains legacy
+import/migration only. Then read [Subpatches](model/subpatches.md),
 [Live Help](model/live-help.md), and [Graph Fragments](model/graph-fragments.md).
 
 For Runtime session behavior, read

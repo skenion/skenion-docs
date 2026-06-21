@@ -7,6 +7,7 @@
       "label": "Graph v0.2 Foundation",
       "collapsed": false,
       "items": [
+        "model/graph-v02-cutover",
         "model/subpatches",
         "model/live-help",
         "model/graph-fragments"

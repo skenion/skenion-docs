@@ -65,6 +65,18 @@ for (const [input, expected] of routeCases) {
 
 const requiredManualCoverage = new Map([
   [
+    "docs/model/graph-v02-cutover.md",
+    [
+      "ProjectDocumentV02",
+      "GraphDocumentV02",
+      "patch libraries",
+      "PatchDefinitionV02",
+      "GraphFragmentV02",
+      "Runtime graph targets",
+      "legacy import/migration only"
+    ]
+  ],
+  [
     "docs/model/subpatches.md",
     [
       "PatchDefinitionV02",
@@ -94,6 +106,18 @@ const requiredManualCoverage = new Map([
       "baseRevision",
       "idConflictPolicy",
       "Read-only help views"
+    ]
+  ],
+  [
+    "versioned_docs/version-0.33/model/graph-v02-cutover.md",
+    [
+      "ProjectDocumentV02",
+      "GraphDocumentV02",
+      "patch libraries",
+      "PatchDefinitionV02",
+      "GraphFragmentV02",
+      "Runtime graph targets",
+      "legacy import/migration only"
     ]
   ],
   [

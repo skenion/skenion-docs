@@ -5,10 +5,12 @@ sidebar_position: 5
 
 # Graph Fragments
 
-A graph fragment is the clipboard and palette payload for selected graph
+A graph fragment is the clipboard and palette payload for selected graph v0.2
 content. It lets Studio copy, cut, paste, duplicate, encapsulate, and
 de-encapsulate graph selections without creating a special object family for
-snippets or help examples.
+snippets or help examples. See
+[Graph v0.2 Cutover](./graph-v02-cutover.md) for the active document and target
+model.
 
 Graph fragments use `GraphFragmentV02`. A fragment contains selected nodes,
 included edges, optional view data, optional `omittedEdges`, and optional

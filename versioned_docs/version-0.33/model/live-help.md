@@ -5,9 +5,11 @@ sidebar_position: 4
 
 # Live Help
 
-Live help is a real graph surface backed by a patch definition. Opening help for
-an object or Manual topic should feel like opening a small, focused patch from
-the Manual, not like reading a static diagram or entering a separate demo model.
+Live help is a real graph v0.2 surface backed by a patch definition. Opening
+help for an object or Manual topic should feel like opening a small, focused
+patch from the Manual, not like reading a static diagram or entering a separate
+demo model. See [Graph v0.2 Cutover](./graph-v02-cutover.md) for the active
+document and target model.
 
 Help patches use `PatchDefinitionV02`, the same primitive as project and package
 patches. A help patch can be displayed read-only to protect first-party or

@@ -5,9 +5,10 @@ sidebar_position: 15
 
 # Subpatches
 
-Subpatches are graph v0.2 composition units. A subpatch packages a patch graph
-behind explicit boundary ports so Studio can present that patch as one object in
-another graph without changing the data delivery model.
+Subpatches are graph v0.2 composition units within the
+[active v0.2 project model](./graph-v02-cutover.md). A subpatch packages a
+patch graph behind explicit boundary ports so Studio can present that patch as
+one object in another graph without changing the data delivery model.
 
 Graph v0.2 is the forward contract for subpatch authoring. Persisted graph v0.1
 documents remain compatibility and import surfaces; do not reinterpret old v0.1
