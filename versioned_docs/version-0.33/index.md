@@ -9,6 +9,7 @@ sidebar_position: 1
 The 0.33 Manual track covers the Skenion graph contract and authoring behavior
 for the 0.33 product minor.
 
-The M06.75 foundation adds Manual coverage for graph v0.2 subpatches and live
-help. Start with [Subpatches](model/subpatches.md) and
-[Live Help](model/live-help.md).
+The M06.75 foundation adds Manual coverage for graph v0.2 subpatches, live
+help, and graph fragments. Start with [Subpatches](model/subpatches.md),
+[Live Help](model/live-help.md), and
+[Graph Fragments](model/graph-fragments.md).

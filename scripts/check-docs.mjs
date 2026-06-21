@@ -63,6 +63,87 @@ for (const [input, expected] of routeCases) {
   }
 }
 
+const requiredManualCoverage = new Map([
+  [
+    "docs/model/subpatches.md",
+    [
+      "PatchDefinitionV02",
+      "core.inlet",
+      "core.outlet",
+      "PatchContractV02",
+      "p <patch-id>",
+      "description",
+      "flat expansion"
+    ]
+  ],
+  [
+    "docs/model/live-help.md",
+    [
+      "PatchDefinitionV02",
+      "read-only",
+      "help-working-copy",
+      "GraphFragmentV02",
+      "Promotion"
+    ]
+  ],
+  [
+    "docs/model/graph-fragments.md",
+    [
+      "GraphFragmentV02",
+      "outsideEndpointPolicy",
+      "baseRevision",
+      "idConflictPolicy",
+      "Read-only help views"
+    ]
+  ],
+  [
+    "versioned_docs/version-0.33/model/subpatches.md",
+    [
+      "PatchDefinitionV02",
+      "core.inlet",
+      "core.outlet",
+      "PatchContractV02",
+      "p <patch-id>",
+      "description",
+      "flat expansion"
+    ]
+  ],
+  [
+    "versioned_docs/version-0.33/model/live-help.md",
+    [
+      "PatchDefinitionV02",
+      "read-only",
+      "help-working-copy",
+      "GraphFragmentV02",
+      "Promotion"
+    ]
+  ],
+  [
+    "versioned_docs/version-0.33/model/graph-fragments.md",
+    [
+      "GraphFragmentV02",
+      "outsideEndpointPolicy",
+      "baseRevision",
+      "idConflictPolicy",
+      "Read-only help views"
+    ]
+  ]
+]);
+
+for (const [relative, snippets] of requiredManualCoverage) {
+  const file = path.join(root, relative);
+  if (!fs.existsSync(file)) {
+    errors.push(`${relative}: missing required M06.75 Manual page`);
+    continue;
+  }
+  const text = fs.readFileSync(file, "utf8");
+  for (const snippet of snippets) {
+    if (!text.includes(snippet)) {
+      errors.push(`${relative}: missing required M06.75 Manual coverage for ${JSON.stringify(snippet)}`);
+    }
+  }
+}
+
 if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);

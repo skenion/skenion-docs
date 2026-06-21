@@ -8,7 +8,8 @@
       "collapsed": false,
       "items": [
         "model/subpatches",
-        "model/live-help"
+        "model/live-help",
+        "model/graph-fragments"
       ]
     }
   ]

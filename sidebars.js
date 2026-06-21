@@ -22,6 +22,7 @@ const manualSidebar = [
       "model/expression-layer",
       "model/subpatches",
       "model/live-help",
+      "model/graph-fragments",
       "model/pd-baseline-matrix"
     ]
   },
