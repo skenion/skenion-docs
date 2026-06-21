@@ -28,6 +28,14 @@ const manualSidebar = [
   },
   {
     type: "category",
+    label: "Runtime Sessions",
+    collapsed: false,
+    items: [
+      "model/desktop-runtime-sessions"
+    ]
+  },
+  {
+    type: "category",
     label: "References",
     items: ["references/pure-data-notes"]
   }

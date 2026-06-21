@@ -127,6 +127,38 @@ const requiredManualCoverage = new Map([
       "idConflictPolicy",
       "Read-only help views"
     ]
+  ],
+  [
+    "docs/model/desktop-runtime-sessions.md",
+    [
+      "Tauri",
+      "RuntimeConnectionProfile",
+      "local-managed",
+      "local-shared",
+      "remote",
+      "owned-child",
+      "shared-runtime",
+      "isolated-runtime",
+      "volatile-help",
+      "RuntimeSessionInfoResponse",
+      "authPolicy"
+    ]
+  ],
+  [
+    "versioned_docs/version-0.33/model/desktop-runtime-sessions.md",
+    [
+      "Tauri",
+      "RuntimeConnectionProfile",
+      "local-managed",
+      "local-shared",
+      "remote",
+      "owned-child",
+      "shared-runtime",
+      "isolated-runtime",
+      "volatile-help",
+      "RuntimeSessionInfoResponse",
+      "authPolicy"
+    ]
   ]
 ]);
 
