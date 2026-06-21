@@ -9,10 +9,14 @@ const config = {
 
   organizationName: "echovisionlab",
   projectName: "skenion-docs",
-  trailingSlash: false,
+  trailingSlash: true,
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "throw",
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "throw"
+    }
+  },
 
   i18n: {
     defaultLocale: "en",
