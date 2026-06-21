@@ -1,16 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import manualVersioning from "../src/manual-versioning.cjs";
 
 const root = process.cwd();
 const statusValues = new Set(["draft", "active", "deferred"]);
 const markdownFiles = listMarkdown(root).sort();
 const errors = [];
+const { manualRouteForVersion, normalizeManualVersion } = manualVersioning;
 
 for (const file of markdownFiles) {
   const relative = path.relative(root, file);
   const text = fs.readFileSync(file, "utf8");
-  if (relative.startsWith(`docs${path.sep}`)) {
+  if (requiresStatus(relative)) {
     const status = readStatus(text);
     if (!status) {
       errors.push(`${relative}: missing status front matter`);
@@ -27,6 +29,37 @@ for (const file of markdownFiles) {
     if (!fs.existsSync(absolute)) {
       errors.push(`${relative}: broken local link ${link}`);
     }
+  }
+  for (const manualPath of patchSpecificManualPaths(text)) {
+    errors.push(`${relative}: patch-specific Manual path ${manualPath}; use the major/minor path instead`);
+  }
+}
+
+const versionCases = new Map([
+  ["", "latest"],
+  ["latest", "latest"],
+  ["current", "latest"],
+  ["0.33", "0.33"],
+  ["0.22", "0.22"],
+  ["0.22.5", "0.22"],
+  ["v0.22.5", "0.22"]
+]);
+for (const [input, expected] of versionCases) {
+  const actual = normalizeManualVersion(input);
+  if (actual !== expected) {
+    errors.push(`manual version ${JSON.stringify(input)} normalized to ${actual}, expected ${expected}`);
+  }
+}
+
+const routeCases = new Map([
+  ["latest", "/manual/"],
+  ["0.33", "/manual/0.33"],
+  ["0.22.5", "/manual/0.22"]
+]);
+for (const [input, expected] of routeCases) {
+  const actual = manualRouteForVersion(input);
+  if (actual !== expected) {
+    errors.push(`manual version ${JSON.stringify(input)} routed to ${actual}, expected ${expected}`);
   }
 }
 
@@ -51,6 +84,13 @@ function listMarkdown(directory) {
     }
   }
   return result;
+}
+
+function requiresStatus(relative) {
+  return (
+    relative.startsWith(`docs${path.sep}`)
+    || relative.startsWith(`versioned_docs${path.sep}`)
+  );
 }
 
 function readStatus(text) {
@@ -87,4 +127,8 @@ function localMarkdownLinks(text) {
     }
   }
   return links;
+}
+
+function patchSpecificManualPaths(text) {
+  return Array.from(new Set(text.match(/\/manual\/0\.\d+\.\d+(?:\/|\b)/g) ?? []));
 }

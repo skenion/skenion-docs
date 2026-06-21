@@ -1,6 +1,6 @@
-# Skenion Docs
+# Skenion Manual
 
-Human-readable design documents for Skenion.
+Human-readable product Manual and design documents for Skenion.
 
 This repository explains how Skenion data moves through the system before it
 becomes node UI, runtime code, or renderer behavior. It is intentionally
@@ -22,6 +22,8 @@ criteria. Machine contracts remain in `skenion-contracts`.
 
 ## Start Here
 
+- [Skenion Manual](docs/index.md)
+- [Manual Versions](docs/manual-versions.md)
 - [Data Delivery Model](docs/model/data-delivery-model.md)
 - [Control And Message](docs/model/control-and-message.md)
 - [Semantic Values](docs/model/semantic-values.md)
@@ -37,7 +39,30 @@ criteria. Machine contracts remain in `skenion-contracts`.
 - [Control Operators](docs/model/control-operators.md)
 - [Audio DSP Model](docs/model/audio-dsp-model.md)
 - [Expression Layer](docs/model/expression-layer.md)
+- [Subpatches](docs/model/subpatches.md)
+- [Live Help](docs/model/live-help.md)
 - [Pure Data Notes](docs/references/pure-data-notes.md)
+
+## Manual Site
+
+This repository builds a Docusaurus Manual for GitHub Pages:
+
+- current source publishes as `/manual/`
+- frozen minor Manual docs publish as paths such as `/manual/0.33`
+- product patch versions normalize to minor Manual versions, so `0.22.5`
+  normalizes to `0.22`
+
+Local development:
+
+```bash
+pnpm run start
+```
+
+Static build:
+
+```bash
+pnpm run build
+```
 
 ## Document Status
 
@@ -61,8 +86,8 @@ Status values:
 pnpm run ci
 ```
 
-The validation script checks document status front matter and local markdown
-links.
+The validation script checks document status front matter, local markdown links,
+Manual version normalization, and the Docusaurus build.
 
 ## License And Credit
 

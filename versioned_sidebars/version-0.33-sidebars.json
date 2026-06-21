@@ -1,0 +1,15 @@
+{
+  "manualSidebar": [
+    "index",
+    "manual-versions",
+    {
+      "type": "category",
+      "label": "Graph v0.2 Foundation",
+      "collapsed": false,
+      "items": [
+        "model/subpatches",
+        "model/live-help"
+      ]
+    }
+  ]
+}

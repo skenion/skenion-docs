@@ -4,6 +4,23 @@
   "private": true,
   "packageManager": "pnpm@10.12.4",
   "scripts": {
-    "ci": "node scripts/check-docs.mjs"
+    "build": "docusaurus build",
+    "ci": "pnpm run docs:check && pnpm run build",
+    "docs:check": "node scripts/check-docs.mjs",
+    "start": "docusaurus start"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ]
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.10.1",
+    "@docusaurus/preset-classic": "^3.10.1",
+    "@mdx-js/react": "^3.1.1",
+    "clsx": "^2.1.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   }
 }
