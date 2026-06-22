@@ -120,9 +120,9 @@ back to the help source.
 
 A help working copy is window-local unless the user explicitly promotes it or
 pastes selected content into a project-owned graph. Copying from help produces
-the same `GraphFragmentV02` clipboard payload as any other graph selection, so
+the same `GraphFragmentV01` clipboard payload as any other graph selection, so
 read-only help views still support copying useful fragments. Promotion copies a
-whole help `PatchDefinitionV02` into the project patch library under a
+whole help `PatchDefinitionV01` into the project patch library under a
 project-owned id. See [Live Help](./live-help.md) and
 [Graph Fragments](./graph-fragments.md) for the graph-side behavior.
 

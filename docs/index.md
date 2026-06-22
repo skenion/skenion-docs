@@ -16,10 +16,10 @@ semantics, then use [Object Layer](model/object-layer.md) and
 to line up with Studio and Runtime.
 
 For the active graph model, start with
-[Graph v0.2 Cutover](model/graph-v02-cutover.md). It explains that
-`ProjectDocumentV02`, patch libraries, live help, graph fragments, and Runtime
-graph targets are active v0.2 surfaces, while v0.1 remains legacy
-import/migration only. Then read [Subpatches](model/subpatches.md),
+[Graph 0.1 Current Contract](model/graph-01-current.md). It explains that
+`ProjectDocumentV01`, patch libraries, live help, graph fragments, and Runtime
+graph targets are current 0.1/V01 surfaces, and that unsupported versions are
+rejected with structured diagnostics. Then read [Subpatches](model/subpatches.md),
 [Live Help](model/live-help.md), and [Graph Fragments](model/graph-fragments.md).
 
 For Runtime session behavior, read

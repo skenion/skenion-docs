@@ -5,23 +5,23 @@ sidebar_position: 3
 
 # Subpatches
 
-Subpatches are graph v0.2 composition units within the
-[active v0.2 project model](./graph-v02-cutover.md). A subpatch packages a
+Subpatches are graph 0.1 composition units within the
+[current graph 0.1 contract](./graph-01-current.md). A subpatch packages a
 patch graph behind explicit boundary ports so Studio can present that patch as
 one object in another graph without changing the data delivery model.
 
-Graph v0.2 is the forward contract for subpatch authoring. Persisted graph v0.1
-documents remain compatibility and import surfaces; do not reinterpret old v0.1
-payloads as subpatch definitions.
+Graph 0.1 is the only current contract for subpatch authoring. Payloads that
+declare another graph or patch version are unsupported and must be rejected with
+diagnostics rather than reinterpreted as subpatch definitions.
 
 ## Patch Library
 
-A reusable patch is stored as a named `PatchDefinitionV02`. Project patches live
+A reusable patch is stored as a named `PatchDefinitionV01`. Project patches live
 in the project `patchLibrary`; first-party package patches and extension package
 patches use the same patch-definition shape when Studio resolves them for
 authoring.
 
-A `PatchDefinitionV02` has an `id`, `revision`, graph v0.2 document, optional
+A `PatchDefinitionV01` has an `id`, `revision`, graph 0.1 document, optional
 metadata, and optional view state. The `id` is the name that a parent graph
 references. Editing a referenced project or package patch definition changes all
 references to that definition unless the author explicitly copies it into an
@@ -46,8 +46,8 @@ the patch definition:
 - `core.outlet` exposes an external output. Inside the patch, it has an input
   port that receives the value leaving the patch graph.
 
-The derived `PatchContractV02` is built from those boundary nodes. It preserves
-the ordinary graph v0.2 port fields: `type`, `rate`, cardinality,
+The derived `PatchContractV01` is built from those boundary nodes. It preserves
+the ordinary graph 0.1 port fields: `type`, `rate`, cardinality,
 `mergePolicy`, `fanOutPolicy`, trigger and latch behavior, default and required
 state, style/group data, label, and `description`.
 
@@ -63,14 +63,14 @@ canonical node kind is `core.subpatch`; object text can also use the shorthand
 `p <patch-id>`. For example, `p scale_twice` resolves to the patch definition
 with id `scale_twice`.
 
-The materialized node's visible ports mirror the derived `PatchContractV02`.
+The materialized node's visible ports mirror the derived `PatchContractV01`.
 Validation must fail clearly when a node references a missing patch, recursively
 references itself, or exposes ports that no longer match the referenced boundary
 contract.
 
 Boundary changes are interface changes. Renaming an inlet, changing a type or
 rate, tightening cardinality, or changing merge/fan-out policy must be validated
-like any other graph v0.2 node interface change.
+like any other graph 0.1 node interface change.
 
 ## Runtime Expansion
 

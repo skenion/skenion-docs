@@ -4,10 +4,10 @@
     "manual-versions",
     {
       "type": "category",
-      "label": "Graph v0.2 Foundation",
+      "label": "Graph 0.1 Foundation",
       "collapsed": false,
       "items": [
-        "model/graph-v02-cutover",
+        "model/graph-01-current",
         "model/subpatches",
         "model/live-help",
         "model/graph-fragments"

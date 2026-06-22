@@ -20,7 +20,7 @@ const manualSidebar = [
       "model/control-operators",
       "model/audio-dsp-model",
       "model/expression-layer",
-      "model/graph-v02-cutover",
+      "model/graph-01-current",
       "model/subpatches",
       "model/live-help",
       "model/graph-fragments",

@@ -5,14 +5,14 @@ sidebar_position: 5
 
 # Graph Fragments
 
-A graph fragment is the clipboard and palette payload for selected graph v0.2
+A graph fragment is the clipboard and palette payload for selected graph 0.1
 content. It lets Studio copy, cut, paste, duplicate, encapsulate, and
 de-encapsulate graph selections without creating a special object family for
 snippets or help examples. See
-[Graph v0.2 Cutover](./graph-v02-cutover.md) for the active document and target
+[Graph 0.1 Current Contract](./graph-01-current.md) for the active document and target
 model.
 
-Graph fragments use `GraphFragmentV02`. A fragment contains selected nodes,
+Graph fragments use `GraphFragmentV01`. A fragment contains selected nodes,
 included edges, optional view data, optional `omittedEdges`, and optional
 metadata.
 
@@ -20,7 +20,7 @@ metadata.
 
 The selected nodes are the center of the fragment. When an edge connects two
 selected nodes and remains valid inside the fragment, include it with its normal
-graph v0.2 metadata: endpoints, resolved type, order, enabled state, adapter,
+graph 0.1 metadata: endpoints, resolved type, order, enabled state, adapter,
 feedback policy, style, label, and `description`.
 
 When an edge crosses the selection boundary, the copy operation must choose an
@@ -61,11 +61,11 @@ identity from auth/session context instead of trusting a pasted client string.
 ## Help Views
 
 Read-only help views still support selection and copy. Copying from help creates
-an ordinary `GraphFragmentV02`; pasting into a user graph remaps ids, preserves
+an ordinary `GraphFragmentV01`; pasting into a user graph remaps ids, preserves
 valid internal edges, and does not mutate the first-party or package help
 source.
 
 If a user wants a whole help patch as a reusable project abstraction, use help
 promotion instead of fragment paste. Promotion copies the source
-`PatchDefinitionV02` into the project patch library so future `core.subpatch` or
+`PatchDefinitionV01` into the project patch library so future `core.subpatch` or
 `p <patch-id>` instances reference a project-owned definition.

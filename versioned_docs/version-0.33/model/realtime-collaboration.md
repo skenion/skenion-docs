@@ -8,7 +8,8 @@ sidebar_position: 7
 Realtime collaboration is coordinated by Runtime. Studio windows may show local
 optimistic updates, cursors, selections, and inspector state, but the accepted
 graph document belongs to the Runtime session. Active collaboration targets use
-the v0.2 model described in [Graph v0.2 Cutover](./graph-v02-cutover.md).
+the 0.1 model described in
+[Graph 0.1 Current Contract](./graph-01-current.md).
 
 ## Runtime Session Authority
 
@@ -59,7 +60,7 @@ returned id and revision mapping.
 
 ## Copy And Paste
 
-Copying creates a `GraphFragmentV02` from the selected nodes and valid internal
+Copying creates a `GraphFragmentV01` from the selected nodes and valid internal
 edges. Pasting applies that fragment to a Runtime graph target. This has the
 same meaning in `local-managed`, `local-shared`, and `remote` connection
 profiles; the profile changes process lifecycle, not graph semantics.
