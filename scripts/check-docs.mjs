@@ -1,13 +1,22 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { createRequire } from "node:module";
 import manualVersioning from "../src/manual-versioning.cjs";
 
 const root = process.cwd();
+const require = createRequire(import.meta.url);
+const siteConfig = require("../docusaurus.config.js");
 const statusValues = new Set(["draft", "active", "deferred"]);
 const markdownFiles = listMarkdown(root).sort();
 const errors = [];
-const { manualRouteForVersion, normalizeManualVersion } = manualVersioning;
+const {
+  assertManualMinorVersion,
+  manualDocusaurusVersions,
+  manualRouteForVersion,
+  manualVersions,
+  normalizeManualVersion
+} = manualVersioning;
 const staleManualTerminologyRules = [
   {
     pattern: /\bgraph-v02-cutover\b/i,
@@ -95,6 +104,9 @@ for (const [input, expected] of routeCases) {
     errors.push(`manual version ${JSON.stringify(input)} routed to ${actual}, expected ${expected}`);
   }
 }
+
+validateManualMetadata();
+validateDocusaurusMarkdownHooks();
 
 const staleTerminologyCases = [
   ["V02", hasStaleV02ContractIdentifier],
@@ -268,6 +280,59 @@ if (errors.length) {
 }
 
 console.log(`validated ${markdownFiles.length} markdown files`);
+
+function validateManualMetadata() {
+  const versionsJson = JSON.parse(fs.readFileSync(path.join(root, "versions.json"), "utf8"));
+  if (!Array.isArray(versionsJson)) {
+    errors.push("versions.json: expected an array of Manual major/minor versions");
+    return;
+  }
+
+  const seen = new Set();
+  for (const version of versionsJson) {
+    try {
+      assertManualMinorVersion(version, "versions.json entry");
+    } catch (error) {
+      errors.push(`versions.json: ${error.message}`);
+      continue;
+    }
+    if (seen.has(version)) {
+      errors.push(`versions.json: duplicate Manual version ${JSON.stringify(version)}`);
+    }
+    seen.add(version);
+
+    const metadata = manualDocusaurusVersions[version];
+    if (!metadata) {
+      errors.push(`docusaurus.config.js: missing docs version metadata for ${version}`);
+    } else if (metadata.path !== version || metadata.label !== version) {
+      errors.push(`docusaurus.config.js: Manual version ${version} must use matching label and path`);
+    }
+
+    const versionedDocs = path.join(root, "versioned_docs", `version-${version}`);
+    const versionedSidebar = path.join(root, "versioned_sidebars", `version-${version}-sidebars.json`);
+    if (!fs.existsSync(versionedDocs)) {
+      errors.push(`versions.json: missing ${path.relative(root, versionedDocs)}`);
+    }
+    if (!fs.existsSync(versionedSidebar)) {
+      errors.push(`versions.json: missing ${path.relative(root, versionedSidebar)}`);
+    }
+  }
+
+  for (const version of manualVersions) {
+    if (!seen.has(version)) {
+      errors.push(`src/manual-versioning.cjs: Manual version ${version} is not backed by versions.json`);
+    }
+  }
+}
+
+function validateDocusaurusMarkdownHooks() {
+  if (Object.hasOwn(siteConfig, "onBrokenMarkdownLinks")) {
+    errors.push("docusaurus.config.js: move onBrokenMarkdownLinks to markdown.hooks.onBrokenMarkdownLinks");
+  }
+  if (siteConfig.markdown?.hooks?.onBrokenMarkdownLinks !== "throw") {
+    errors.push("docusaurus.config.js: markdown.hooks.onBrokenMarkdownLinks must be \"throw\"");
+  }
+}
 
 function listMarkdown(directory) {
   const result = [];

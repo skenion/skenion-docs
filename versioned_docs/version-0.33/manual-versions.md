@@ -11,6 +11,31 @@ Skenion product patch releases normalize to their minor Manual version before
 Manual lookup. For example, `0.33.5` normalizes to `0.33`, then resolves through
 this 0.33 Manual track. Patch-specific Manual paths are not valid.
 
+## Latest Manual Promotion
+
+Pull requests and ordinary `main` builds may validate Manual content, but they
+do not promote the latest published Manual by themselves. Latest Manual and
+GitHub Pages promotion happens only from a release train promotion that carries
+or references the train manifest.
+
+For the `0.33.0` train, the manifest records `trainId: "0.33"`, the Manual
+version `0.33.0`, and this deployed Manual path `/manual/0.33/`. The docs
+deployment verifies that the repository contains the matching `0.33` Manual
+track before publishing the Pages artifact. Patch trains on the same product
+minor, such as `0.33.5`, continue to resolve to `/manual/0.33/`; patch-specific
+Manual paths are not valid.
+
+## Artifact Verification
+
+Manual deployment is one release completion gate in the lockstep train. The
+train manifest also names the registry packages, Runtime binary assets, Studio
+desktop packages, Runtime sidecars, examples fixture, checksums, and Pages URL
+that belong to the same product version.
+
+A train is not complete just because the docs build succeeds. It is complete
+only after the release train verifier confirms the expected artifacts and the
+GitHub Pages deployment for this Manual path has succeeded.
+
 ## Strict v0 Version Policy
 
 Skenion 0.33 treats version fields as exact current-version discriminators, not
