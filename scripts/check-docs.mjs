@@ -100,7 +100,11 @@ const staleTerminologyCases = [
   ["import/migration", hasImportMigrationCompatibilityWording],
   ["legacy import path", hasImportMigrationCompatibilityWording],
   ["migration path", hasImportMigrationCompatibilityWording],
-  ["import migration compatibility", hasImportMigrationCompatibilityWording]
+  ["import migration compatibility", hasImportMigrationCompatibilityWording],
+  ["legacy import-migration only", hasImportMigrationCompatibilityWording],
+  ["import-migration compatibility", hasImportMigrationCompatibilityWording],
+  ["legacy/deprecated/import-only compatibility", hasImportMigrationCompatibilityWording],
+  ["import-only compatibility", hasImportMigrationCompatibilityWording]
 ];
 for (const [text, predicate] of staleTerminologyCases) {
   if (!predicate(text)) {
@@ -293,7 +297,15 @@ function hasStaleV02ContractIdentifier(text) {
 }
 
 function hasImportMigrationCompatibilityWording(text) {
-  return /\b(?:import\/migration|legacy import paths?|migration paths?|import migration compatibility)\b/i.test(text);
+  const staleImportCompatibilityPatterns = [
+    /\bimport[/-]migration\b/i,
+    /\bimport migration compatibility\b/i,
+    /\blegacy import paths?\b/i,
+    /\bmigration paths?\b/i,
+    /\bimport-only compatibility\b/i,
+    /\blegacy\/deprecated\/import-only compatibility\b/i
+  ];
+  return staleImportCompatibilityPatterns.some((pattern) => pattern.test(text));
 }
 
 function readStatus(text) {
