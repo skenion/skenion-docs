@@ -77,6 +77,10 @@ const config = {
               to: "/manual/"
             },
             {
+              label: "0.43",
+              to: "/manual/0.43"
+            },
+            {
               label: "0.33",
               to: "/manual/0.33"
             }

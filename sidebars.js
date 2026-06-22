@@ -1,6 +1,7 @@
 const manualSidebar = [
   "index",
   "manual-versions",
+  "release-train-install",
   {
     type: "category",
     label: "Graph Model",
