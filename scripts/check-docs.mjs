@@ -28,6 +28,10 @@ const staleManualTerminologyRules = [
   {
     matches: hasImportMigrationCompatibilityWording,
     message: "describe strict unsupported-version rejection instead of import/migration compatibility"
+  },
+  {
+    matches: hasBroadVersionPromiseWording,
+    message: "name exact current v0 versions instead of broad ranges or alias promises"
   }
 ];
 
@@ -104,7 +108,14 @@ const staleTerminologyCases = [
   ["legacy import-migration only", hasImportMigrationCompatibilityWording],
   ["import-migration compatibility", hasImportMigrationCompatibilityWording],
   ["legacy/deprecated/import-only compatibility", hasImportMigrationCompatibilityWording],
-  ["import-only compatibility", hasImportMigrationCompatibilityWording]
+  ["import-only compatibility", hasImportMigrationCompatibilityWording],
+  ["0.x", hasBroadVersionPromiseWording],
+  ["0.33 or later", hasBroadVersionPromiseWording],
+  ["0.33 and newer", hasBroadVersionPromiseWording],
+  [">=0.33 <0.35", hasBroadVersionPromiseWording],
+  ["^0.33", hasBroadVersionPromiseWording],
+  ["~0.33", hasBroadVersionPromiseWording],
+  ["supports fallback aliases", hasBroadVersionPromiseWording]
 ];
 for (const [text, predicate] of staleTerminologyCases) {
   if (!predicate(text)) {
@@ -306,6 +317,17 @@ function hasImportMigrationCompatibilityWording(text) {
     /\blegacy\/deprecated\/import-only compatibility\b/i
   ];
   return staleImportCompatibilityPatterns.some((pattern) => pattern.test(text));
+}
+
+function hasBroadVersionPromiseWording(text) {
+  const broadVersionPromisePatterns = [
+    /\b0\.x\b/i,
+    /\b0\.\d+\s+(?:or later|and newer|and above)\b/i,
+    /(?:>=|<=|>|<)\s*0\.\d+/i,
+    /[\^~]0\.\d+/,
+    /\b(?:supports?|accepts?|provides?)\s+fallback aliases?\b/i
+  ];
+  return broadVersionPromisePatterns.some((pattern) => pattern.test(text));
 }
 
 function readStatus(text) {

@@ -17,6 +17,11 @@ structured diagnostics. Then read [Subpatches](model/subpatches.md),
 [Live Help](model/live-help.md), and
 [Graph Fragments](model/graph-fragments.md).
 
+For release train policy, read [Manual Versions](manual-versions.md). It
+explains strict v0 version rejection, lockstep 0.33 product train artifacts,
+and the rule that public Manual pages name exact current versions rather than
+broad ranges or fallback aliases.
+
 Runtime session coverage includes
 [Desktop Runtime Sessions](model/desktop-runtime-sessions.md) and
 [Realtime Collaborative Editing](model/realtime-collaboration.md).
