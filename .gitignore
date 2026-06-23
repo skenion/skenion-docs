@@ -3,3 +3,7 @@ node_modules/
 .pnpm-store/
 .docusaurus/
 build/
+
+# Generated manual-promotion validation output
+.skenion-manual-promotion/
+.skenion-manifest-source/

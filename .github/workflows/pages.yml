@@ -3,17 +3,22 @@ name: GitHub Pages
 on:
   workflow_dispatch:
     inputs:
-      train_version:
+      train-version:
         description: Lockstep train version to promote, for example 0.43.0.
         required: true
         type: string
       manifest:
-        description: Inline release train JSON manifest, or a manifest path in this repository.
+        description: Inline final train JSON manifest, or path in manifest-repository.
         required: true
         type: string
-      manifest_ref:
-        description: Optional repository ref used when manifest is a path.
+      manifest-ref:
+        description: Immutable manifest commit SHA.
+        required: true
+        type: string
+      manifest-repository:
+        description: Repository owning a manifest path, for example skenion/skenion.
         required: false
+        default: skenion/skenion
         type: string
   repository_dispatch:
     types:
@@ -35,12 +40,26 @@ jobs:
     outputs:
       train-version: ${{ steps.resolve.outputs['train-version'] }}
       train-id: ${{ steps.resolve.outputs['train-id'] }}
-      manifest: ${{ steps.resolve.outputs.manifest }}
+      manifest: ${{ steps.materialize.outputs.manifest }}
       manifest-ref: ${{ steps.resolve.outputs['manifest-ref'] }}
+      manifest-repository: ${{ steps.resolve.outputs['manifest-repository'] }}
     steps:
       - uses: actions/checkout@v6
       - id: resolve
         run: node scripts/resolve-manual-promotion-inputs.mjs
+      - name: Checkout manifest source
+        if: ${{ steps.resolve.outputs['manifest-is-inline'] != 'true' }}
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ steps.resolve.outputs['manifest-repository'] }}
+          ref: ${{ steps.resolve.outputs['manifest-ref'] }}
+          path: .skenion-manifest-source
+          persist-credentials: false
+      - id: materialize
+        env:
+          SKENION_MANUAL_MANIFEST: ${{ steps.resolve.outputs.manifest }}
+          SKENION_MANUAL_MANIFEST_ROOT: .skenion-manifest-source
+        run: node scripts/materialize-manual-promotion-manifest.mjs
 
   validate-train:
     name: Validate train manifest
@@ -62,6 +81,8 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       SKENION_MANUAL_TRAIN_VERSION: ${{ needs.validate-train.outputs['train-version'] }}
       SKENION_MANUAL_TRAIN_ID: ${{ needs.validate-train.outputs['train-id'] }}
+      SKENION_MANUAL_TRAIN_MANIFEST: ${{ needs.resolve-promotion.outputs.manifest }}
+      SKENION_MANUAL_MANIFEST_REF: ${{ needs.resolve-promotion.outputs['manifest-ref'] }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
