@@ -1,4 +1,18 @@
-const { manualDocusaurusVersions } = require("./src/manual-versioning.cjs");
+const {
+  manualDocusaurusVersions,
+  manualVersions
+} = require("./src/manual-versioning.cjs");
+
+const manualFooterItems = Object.freeze([
+  {
+    label: "Latest",
+    to: "/manual/"
+  },
+  ...manualVersions.map((version) => ({
+    label: version,
+    to: `/manual/${version}`
+  }))
+]);
 
 const config = {
   title: "skenion Manual",
@@ -75,20 +89,7 @@ const config = {
       links: [
         {
           title: "Manual",
-          items: [
-            {
-              label: "Latest",
-              to: "/manual/"
-            },
-            {
-              label: "0.43",
-              to: "/manual/0.43"
-            },
-            {
-              label: "0.33",
-              to: "/manual/0.33"
-            }
-          ]
+          items: manualFooterItems
         },
         {
           title: "Project",

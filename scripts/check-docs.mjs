@@ -82,6 +82,7 @@ const versionCases = new Map([
   ["latest", "latest"],
   ["current", "latest"],
   ["0.33", "0.33"],
+  ["0.44.0", "0.44"],
   ["0.43.0", "0.43"],
   ["0.22", "0.22"],
   ["0.22.5", "0.22"],
@@ -97,6 +98,7 @@ for (const [input, expected] of versionCases) {
 const routeCases = new Map([
   ["latest", "/manual/"],
   ["0.33", "/manual/0.33"],
+  ["0.44.0", "/manual/0.44"],
   ["0.43.0", "/manual/0.43"],
   ["0.22.5", "/manual/0.22"]
 ]);

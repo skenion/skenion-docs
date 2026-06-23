@@ -5,8 +5,8 @@ sidebar_position: 3
 
 # Release Train And Install Artifacts
 
-The active skenion release train target is `0.44.0`. The matching Manual track
-is `0.44`, and train promotion deploys it at `/manual/0.44/`.
+The skenion 0.44 release train target is `0.44.0`. The matching Manual track is
+`0.44`, and train promotion deploys it at `/manual/0.44/`.
 
 skenion uses one lockstep product version across the release train. A user
 install is considered complete only when the Contracts artifacts, Runtime

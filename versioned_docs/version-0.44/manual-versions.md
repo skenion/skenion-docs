@@ -5,17 +5,14 @@ sidebar_position: 2
 
 # Manual Versions
 
-The published Manual has stable documentation paths:
-
-- `/manual/` for the current Manual source.
-- `/manual/<major>.<minor>/` for frozen product minor Manuals, such as `/manual/0.33/`.
+The 0.44 Manual track is published at `/manual/0.44/`.
 
 Product patch releases do not mint separate Manual versions. A product version
-such as `0.22.5` normalizes to Manual version `0.22` and is served from
-`/manual/0.22/`, not from a patch-specific Manual path.
+such as `0.44.1` normalizes to Manual version `0.44` and is served from
+`/manual/0.44/`, not from a patch-specific Manual path.
 
-This keeps patch-level release notes and compatibility fixes tied to the same
-minor Manual surface.
+This keeps patch-level release notes and compatibility fixes tied to the 0.44
+Manual lookup. A `0.44` patch train resolves through this 0.44 Manual track.
 
 ## Latest Manual Promotion
 
@@ -24,13 +21,12 @@ do not promote the latest published Manual by themselves. Latest Manual and
 GitHub Pages promotion happens only from a release train promotion that carries
 or references the train manifest.
 
-The active release train promotion target is `0.44`. A `0.44` train manifest
-records `train-id: "0.44"`, the Manual version `0.44.0`, and the deployed
-Manual path `/manual/0.44/`. The docs deployment verifies that the repository
-contains the matching `0.44` Manual track before publishing the Pages artifact.
-Patch trains on the same product minor continue to resolve to `/manual/0.44/`;
-patch-specific Manual paths are not valid. Historical train Manuals, such as
-`0.43`, remain available from their frozen major/minor paths.
+For the `0.44.0` train, the manifest records `train-id: "0.44"`, the Manual
+version `0.44.0`, and this deployed Manual path `/manual/0.44/`. The docs
+deployment verifies that the repository contains the matching `0.44` Manual
+track before publishing the Pages artifact. Patch trains on the same product
+minor continue to resolve to `/manual/0.44/`; patch-specific Manual paths are
+not valid.
 
 ## Artifact Verification
 
@@ -45,14 +41,14 @@ GitHub Pages deployment for the train Manual path has succeeded.
 
 ## Strict v0 Version Policy
 
-skenion v0 treats version fields as exact current-version discriminators, not
+skenion 0.44 treats version fields as exact current-version discriminators, not
 as compatibility ranges. A graph, project, node, operation, extension package,
 Runtime HTTP request, manifest, protocol payload, or Manual metadata record that
 declares an unsupported version is rejected with a structured diagnostic before
 authoring, validation, planning, execution, package installation, or help
 rendering continues.
 
-The v0 Manual does not define legacy compatibility modes, deprecated
+The 0.44 Manual does not define legacy compatibility modes, deprecated
 compatibility modes, or import-only modes. It also does not define
 compatibility aliases for old graph labels, project shapes, package manifests,
 Runtime routes, or protocol names. Public examples should name the current
@@ -60,13 +56,13 @@ contract label and artifact version directly.
 
 ## Lockstep Product Trains
 
-skenion v0 releases move as one product train. A completed train has one product
-version shared by the releasable artifacts in that train, using
-registry-compatible SemVer such as `0.55.0` where a three-part version is
+skenion 0.44 is a lockstep product train. A completed 0.44 release aligns the
+releasable artifacts in that train to the same product version, using
+registry-compatible SemVer such as `0.44.0` where a three-part version is
 required.
 
-Before a v0 train is complete, the release train metadata must align these
-surfaces to the same product version:
+The release train metadata must align these surfaces before the train is
+complete:
 
 - `@skenion/contracts` and the `skenion-contracts` Rust crate.
 - `@skenion/sdk`.
@@ -76,10 +72,10 @@ surfaces to the same product version:
 - skenion examples fixtures, tag, or commit.
 - Manual metadata and the deployed major/minor Manual path.
 
-The Manual path remains major/minor, but the release train manifest records the
-exact product version and artifact set. For example, the `0.44.0` train
-publishes Manual content under `/manual/0.44/` while the train metadata
-identifies the exact `0.44.0` artifacts.
+Patch releases stay on this major/minor Manual path, but the release train
+manifest records the exact product version and artifact set. A `0.44` patch
+train still resolves Manual content through `/manual/0.44/` while the train
+metadata identifies the exact patch-level artifacts.
 
 See [Release Train And Install Artifacts](release-train-install.md) for the
 `0.44.0` compatibility matrix, Runtime standalone binaries, Studio desktop

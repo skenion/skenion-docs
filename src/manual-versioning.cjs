@@ -19,7 +19,7 @@ function normalizeManualVersion(version) {
 function assertManualMinorVersion(version, label = "Manual version") {
   const text = String(version ?? "").trim();
   if (!/^0\.\d+$/.test(text)) {
-    throw new Error(`${label} must be a v0 major/minor value such as "0.43", got "${version}"`);
+    throw new Error(`${label} must be a v0 major/minor value such as "0.44", got "${version}"`);
   }
   if (normalizeManualVersion(text) !== text) {
     throw new Error(`${label} must already be normalized to major/minor, got "${version}"`);
