@@ -1,9 +1,39 @@
-node_modules/
+# OS and editor files
 .DS_Store
+.idea/
+.vscode/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies and package-manager state
+node_modules/
 .pnpm-store/
+
+# Docusaurus build and cache
 .docusaurus/
 build/
+.cache/
 
-# Generated manual-promotion validation output
+# Coverage, test reports, and logs
+coverage/
+test-results/
+playwright-report/
+junit.xml
+junit-*.xml
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Release-train validation scratch
+.skenion-train/
+.skenion-ci/
+.caller/
+
+# Manual-promotion validation scratch
 .skenion-manual-promotion/
 .skenion-manifest-source/
