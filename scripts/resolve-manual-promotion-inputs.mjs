@@ -15,27 +15,70 @@ const inputs = event.inputs ?? {};
 const payload = event.client_payload ?? {};
 
 const trainVersion = firstString(
-  inputs.train_version,
-  payload.trainVersion,
-  payload.train_version,
-  payload.productVersion,
-  payload.product_version,
-  payload.version
+  inputs["train-version"],
+  payload["train-version"]
 );
-const manifest = firstManifest(inputs.manifest, payload.manifest, payload.trainManifest, payload.releaseTrainManifest);
-const manifestRef = firstString(inputs.manifest_ref, payload.manifestRef, payload.manifest_ref, payload.ref, payload.sha);
+const manifest = firstManifest(
+  inputs.manifest,
+  inputs["release-train-manifest"],
+  payload.manifest,
+  payload["release-train-manifest"]
+);
+const manifestRef = firstString(
+  inputs["manifest-ref"],
+  payload["manifest-ref"]
+);
+const manifestRepository = firstString(
+  inputs["manifest-repository"],
+  payload["manifest-repository"]
+) || "skenion/skenion";
+const legacyKeys = presentLegacyKeys(inputs, "inputs", [
+  "train_version",
+  "manifest_ref",
+  "manifest_repository"
+]).concat(presentLegacyKeys(payload, "client_payload", [
+  "trainVersion",
+  "train_version",
+  "productVersion",
+  "product_version",
+  "version",
+  "trainManifest",
+  "releaseTrainManifest",
+  "manifestRef",
+  "manifest_ref",
+  "manifestRepository",
+  "manifest_repository",
+  "ref",
+  "sha"
+]));
+const manifestIsInline = isInlineJson(manifest);
+
+if (legacyKeys.length) {
+  fail(
+    `Manual promotion accepts current kebab-case event keys only; replace ${legacyKeys.join(", ")} with train-version, manifest or release-train-manifest, manifest-ref, and manifest-repository.`
+  );
+}
 
 if (eventName !== "workflow_dispatch" && eventName !== "repository_dispatch") {
   fail(`Manual promotion must run from workflow_dispatch or repository_dispatch, got "${eventName}".`);
 }
 if (!trainVersion) {
-  fail("Manual promotion requires a train_version input or trainVersion client payload.");
+  fail("Manual promotion requires a train-version input or client payload.");
 }
 if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(trainVersion)) {
   fail(`Manual promotion train version must be registry-compatible SemVer, got "${trainVersion}".`);
 }
 if (!manifest) {
   fail("Manual promotion requires a release train manifest path or inline JSON manifest.");
+}
+if (!manifestRef) {
+  fail("Manual promotion requires manifest-ref to identify the immutable train manifest commit.");
+}
+if (!/^[0-9a-f]{40}$/i.test(manifestRef)) {
+  fail(`Manual promotion manifest-ref must be a 40-character commit SHA, got "${manifestRef}".`);
+}
+if (!manifestIsInline && !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(manifestRepository)) {
+  fail(`Manual promotion manifest-repository must be in owner/name form, got "${manifestRepository}".`);
 }
 
 const trainId = normalizeManualVersion(trainVersion);
@@ -47,6 +90,8 @@ setOutput("train-version", trainVersion);
 setOutput("train-id", trainId);
 setOutput("manifest", manifest);
 setOutput("manifest-ref", manifestRef);
+setOutput("manifest-repository", manifestRepository);
+setOutput("manifest-is-inline", manifestIsInline ? "true" : "false");
 
 console.log(`Resolved Manual promotion for train ${trainId} (${trainVersion}).`);
 
@@ -69,6 +114,17 @@ function firstManifest(...values) {
     }
   }
   return "";
+}
+
+function presentLegacyKeys(source, label, keys) {
+  return keys
+    .filter((key) => Object.hasOwn(source, key))
+    .map((key) => `${label}.${key}`);
+}
+
+function isInlineJson(value) {
+  const text = String(value ?? "").trimStart();
+  return text.startsWith("{") || text.startsWith("[");
 }
 
 function setOutput(name, value) {
