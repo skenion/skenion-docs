@@ -47,6 +47,10 @@ const config = {
   themeConfig: {
     navbar: {
       title: "skenion Manual",
+      logo: {
+        alt: "skenion",
+        src: "img/skenion-logo-safe.svg"
+      },
       items: [
         {
           type: "docSidebar",
