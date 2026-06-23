@@ -7,37 +7,38 @@ sidebar_position: 2
 
 The 0.44 Manual track is published at `/manual/0.44/`.
 
-Product patch releases do not mint separate Manual versions. A product version
+Product patch releases do not mint separate Manual versions. A release version
 such as `0.44.1` normalizes to Manual version `0.44` and is served from
 `/manual/0.44/`, not from a patch-specific Manual path.
 
 This keeps patch-level release notes and compatibility fixes tied to the 0.44
-Manual lookup. A `0.44` patch train resolves through this 0.44 Manual track.
+Manual lookup. A `0.44` patch release resolves through this 0.44 Manual track.
 
 ## Latest Manual Promotion
 
 Pull requests and ordinary `main` builds may validate Manual content, but they
 do not promote the latest published Manual by themselves. Latest Manual and
-GitHub Pages promotion happens only from a release train promotion that carries
-or references the train manifest.
+GitHub Pages promotion happens only from a compatibility matrix promotion that
+carries or references a verified `skenion.compatibility-matrix` document.
 
-For the `0.44.0` train, the manifest records `train-id: "0.44"`, the Manual
-version `0.44.0`, and this deployed Manual path `/manual/0.44/`. The docs
-deployment verifies that the repository contains the matching `0.44` Manual
-track before publishing the Pages artifact. Patch trains on the same product
-minor continue to resolve to `/manual/0.44/`; patch-specific Manual paths are
-not valid.
+For the `0.44` Contracts line, the matrix records `contracts-line: "0.44"`,
+the canonical `contracts-range: ">=0.44.0 <0.45.0"`, component artifact
+versions, the Manual version, and this deployed Manual path `/manual/0.44/`.
+The docs deployment verifies that the repository contains the matching `0.44`
+Manual track before publishing the Pages artifact. Patch releases on the same
+product minor continue to resolve to `/manual/0.44/`; patch-specific Manual
+paths are not valid.
 
 ## Artifact Verification
 
-Manual deployment is one release completion gate in the lockstep train. The
-train manifest also names the registry packages, Runtime binary assets, Studio
-desktop packages, Runtime sidecars, examples fixture, checksums, and Pages URL
-that belong to the same product version.
+Manual deployment is one compatibility-matrix promotion gate. The matrix also
+names the registry packages, Runtime binary assets, Studio desktop packages,
+Runtime sidecars, examples conformance evidence, checksums, and Pages URL that
+were verified together.
 
-A train is not complete just because the docs build succeeds. It is complete
-only after the release train verifier confirms the expected artifacts and the
-GitHub Pages deployment for the train Manual path has succeeded.
+A compatibility matrix is not promoted just because the docs build succeeds. It
+is promoted only after the matrix verifier confirms the expected artifacts and
+the GitHub Pages deployment for this Manual path has succeeded.
 
 ## Strict v0 Version Policy
 
@@ -54,37 +55,37 @@ compatibility aliases for old graph labels, project shapes, package manifests,
 Runtime routes, or protocol names. Public examples should name the current
 contract label and artifact version directly.
 
-## Lockstep Product Trains
+## Contracts Lines And Matrices
 
-skenion 0.44 is a lockstep product train. A completed 0.44 release aligns the
-releasable artifacts in that train to the same product version, using
-registry-compatible SemVer such as `0.44.0` where a three-part version is
-required.
+skenion 0.44 is coordinated by a compatibility matrix. Component repositories
+use their natural Release Please versions; the promoted matrix records which
+released component artifacts are compatible with the 0.44 Contracts line.
 
-The release train metadata must align these surfaces before the train is
-complete:
+Before a 0.44 matrix is promoted, verification must cover these surfaces:
 
-- `@skenion/contracts` and the `skenion-contracts` Rust crate.
-- `@skenion/sdk`.
+- `@skenion/contracts` and the `skenion-contracts` Rust crate inside the 0.44
+  Contracts line.
+- `@skenion/sdk`, when listed, with the declared supported Contracts range.
 - Runtime OS/arch GitHub Release binary assets, sidecars, checksums, and
   smoke-test evidence.
 - Studio web deployment artifacts and desktop GitHub Release packages.
-- skenion examples fixtures, tag, or commit.
-- Manual metadata and the deployed major/minor Manual path.
+- skenion examples conformance evidence, fixture tag, or recorded commit.
+- Manual metadata, Pages deployment evidence, and the deployed major/minor
+  Manual path.
 
-Patch releases stay on this major/minor Manual path, but the release train
-manifest records the exact product version and artifact set. A `0.44` patch
-train still resolves Manual content through `/manual/0.44/` while the train
-metadata identifies the exact patch-level artifacts.
+Patch releases stay on this major/minor Manual path, while the compatibility
+matrix records the exact component artifacts. A 0.44 patch release still
+resolves Manual content through `/manual/0.44/` while the matrix identifies the
+exact component artifact versions and evidence that were promoted.
 
-See [Release Train And Install Artifacts](release-train-install.md) for the
-`0.44.0` compatibility matrix, Runtime standalone binaries, Studio desktop
-packages, sidecar requirements, completion gates, and updater status.
+See [Compatibility Matrix And Install Artifacts](release-train-install.md) for
+the 0.44 compatibility matrix, Runtime standalone binaries, Studio desktop
+packages, sidecar requirements, promotion gates, and updater status.
 
-## No Version Range Promises
+## No Broad Version Promises
 
-Manual pages should avoid wildcard train labels, forward-looking version
-promises, broad SemVer ranges, or fallback alias promises. When a page
-describes a supported v0 surface, it should name the exact current graph
-contract, protocol, package, Manual track, or product train version that is
-supported.
+Manual pages should avoid wildcard labels, forward-looking version promises,
+broad SemVer ranges, or fallback alias promises. The exception is the canonical
+Contracts compatibility line range recorded by the matrix, such as
+`>=0.44.0 <0.45.0`. Wire/schema discriminator fields remain exact
+current-version checks, not package SemVer ranges.

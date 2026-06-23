@@ -8,7 +8,7 @@ const manifestJson = readManifest(manifestInput);
 
 JSON.parse(manifestJson);
 setOutput("manifest", manifestJson);
-console.log("Materialized Manual promotion train manifest.");
+console.log("Materialized Manual promotion compatibility matrix.");
 
 function readManifest(value) {
   const text = String(value ?? "").trim();

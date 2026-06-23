@@ -392,11 +392,26 @@ function hasBroadVersionPromiseWording(text) {
   const broadVersionPromisePatterns = [
     /\b0\.x\b/i,
     /\b0\.\d+\s+(?:or later|and newer|and above)\b/i,
-    /(?:>=|<=|>|<)\s*0\.\d+/i,
     /[\^~]0\.\d+/,
     /\b(?:supports?|accepts?|provides?)\s+fallback aliases?\b/i
   ];
-  return broadVersionPromisePatterns.some((pattern) => pattern.test(text));
+  return broadVersionPromisePatterns.some((pattern) => pattern.test(text)) || hasNonCanonicalV0Range(text);
+}
+
+function hasNonCanonicalV0Range(text) {
+  const rangePattern = /(?:>=|<=|>|<)\s*0\.\d+(?:\.\d+)?(?:\s+<\s*0\.\d+(?:\.\d+)?)?/gi;
+  for (const match of text.matchAll(rangePattern)) {
+    if (!isCanonicalContractsLineRange(match[0])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isCanonicalContractsLineRange(text) {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  const match = /^>=0\.(\d+)\.0 <0\.(\d+)\.0$/.exec(normalized);
+  return Boolean(match && Number(match[2]) === Number(match[1]) + 1);
 }
 
 function readStatus(text) {

@@ -28,17 +28,23 @@ rejection for all others.
 
 ## Manual Versioning
 
-The Manual is versioned by product major/minor train, such as `/manual/0.55/`.
-Patch releases such as `0.55.3` belong to the `0.55` Manual. The latest Manual
-must correspond to a completed lockstep product release train.
+The Manual is versioned by product major/minor path, such as `/manual/0.55/`.
+Patch releases such as `0.55.3` belong to the `0.55` Manual path. The latest
+Manual must correspond to a verified compatibility matrix and a successful
+GitHub Pages deployment for the normalized major/minor path.
 
-## Lockstep Release Train
+## Compatibility Matrix Promotion
 
-Skenion releasable packages and applications use lockstep product SemVer during
-v0. If the product train is `0.55`, docs deployment, Manual version tags, and
-release train references must belong to that same train. Do not create an
-independent docs version stream. GitHub Pages deployment must be verified before
-claiming a Manual release complete.
+Skenion v0 releases are coordinated by verified compatibility matrices, not by
+one shared product SemVer across every component. Component repositories use their
+natural Release Please versions; the hub promotes a matrix that declares the
+Contracts line, supported Contracts range, component artifact versions,
+Runtime/Studio assets, examples conformance, and Manual Pages evidence.
+
+A Contracts compatibility line such as `0.45` means `>=0.45.0 <0.46.0`.
+Patch releases inside that line are compatible. Graph, project, extension,
+Runtime HTTP, manifest, and protocol discriminator fields remain exact
+current-version checks and should not be described as SemVer ranges.
 
 ## Manager, Worker, And Review Gate Defaults
 

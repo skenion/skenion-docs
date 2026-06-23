@@ -13,10 +13,21 @@ const {
 const CANONICAL_PAGES_ORIGIN = "https://skenion.github.io/skenion-docs";
 const args = parseArgs();
 const root = process.cwd();
-const trainVersion = required(args["train-version"] ?? process.env.SKENION_MANUAL_TRAIN_VERSION, "train-version");
+const trainVersion = required(
+  args["compatibility-version"]
+    ?? process.env.SKENION_MANUAL_COMPATIBILITY_VERSION
+    ?? args["train-version"]
+    ?? process.env.SKENION_MANUAL_TRAIN_VERSION,
+  "compatibility-version"
+);
 const expectedTrainId = normalizeManualVersion(trainVersion);
 const trainId = args["train-id"] ?? process.env.SKENION_MANUAL_TRAIN_ID ?? expectedTrainId;
-const manifestInput = args.manifest ?? process.env.SKENION_MANUAL_TRAIN_MANIFEST ?? "";
+const manifestInput =
+  args["compatibility-matrix"]
+  ?? process.env.SKENION_MANUAL_COMPATIBILITY_MATRIX
+  ?? args.manifest
+  ?? process.env.SKENION_MANUAL_TRAIN_MANIFEST
+  ?? "";
 const manifestRef = String(args["manifest-ref"] ?? process.env.SKENION_MANUAL_MANIFEST_REF ?? "").trim();
 const pagesOriginOverride = args["pages-origin"] ?? process.env.SKENION_MANUAL_PAGES_ORIGIN;
 const out = args.out ?? process.env.SKENION_MANUAL_PROMOTION_OUT ?? ".skenion-manual-promotion/manual-promotion.json";
@@ -25,13 +36,13 @@ const expectedPagesUrl = `${CANONICAL_PAGES_ORIGIN}${expectedManualPath}`;
 const errors = [];
 
 if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(trainVersion)) {
-  errors.push(`train-version must be registry-compatible SemVer, got "${trainVersion}"`);
+  errors.push(`compatibility-version must be registry-compatible SemVer, got "${trainVersion}"`);
 }
 if (expectedTrainId === "latest") {
-  errors.push(`train-version "${trainVersion}" must resolve to a v0 major/minor Manual track`);
+  errors.push(`compatibility-version "${trainVersion}" must resolve to a v0 major/minor Manual track`);
 }
 if (trainId !== expectedTrainId) {
-  errors.push(`train-id "${trainId}" must match normalized train-version "${expectedTrainId}"`);
+  errors.push(`train-id "${trainId}" must match normalized compatibility-version "${expectedTrainId}"`);
 }
 if (pagesOriginOverride !== undefined) {
   const requestedPagesOrigin = String(pagesOriginOverride).replace(/\/+$/, "");
@@ -42,7 +53,7 @@ if (pagesOriginOverride !== undefined) {
   }
 }
 if (!manifestInput.trim()) {
-  errors.push("manifest is required for Manual Pages promotion verification");
+  errors.push("compatibility matrix is required for Manual Pages promotion verification");
 }
 if (!manifestRef) {
   errors.push("manifest-ref is required for Manual Pages promotion verification");
@@ -82,7 +93,7 @@ for (const version of manualVersions) {
 
 const manifest = manifestInput.trim() ? readManifest(manifestInput, errors) : null;
 if (manifest) {
-  validateTrainManifest(manifest);
+  validateCompatibilityMatrix(manifest);
 }
 
 if (errors.length) {
@@ -96,22 +107,28 @@ const promotion = {
   "schema-version": "0.1.0",
   "train-version": trainVersion,
   "train-id": trainId,
+  "compatibility-version": trainVersion,
+  "compatibility-line": trainId,
+  "contracts-line": manifest?.["contracts-line"] ?? trainId,
+  "contracts-range": manifest?.["contracts-range"] ?? canonicalRangeForLine(trainId),
   "manual-version": trainVersion,
   "manual-track": trainId,
   "manual-path": expectedManualPath,
   "latest-path": "/manual/",
   "pages-url": expectedPagesUrl,
   "manifest-ref": manifestRef,
+  "compatibility-matrix-ref": manifestRef,
   "release-gate": {
     id: "docs-pages-deployment",
     status: "passed",
     required: true,
+    "requires": "compatibility-matrix-verification",
     "manual-version": trainVersion,
     "manual-path": expectedManualPath,
     "pages-url": expectedPagesUrl,
     "evidence-url": evidenceUrl
   },
-  "promoted-by": "release-train",
+  "promoted-by": "compatibility-matrix",
   "generated-at": new Date().toISOString()
 };
 
@@ -125,35 +142,43 @@ setOutput("pages-url", promotion["pages-url"]);
 setOutput("evidence-url", evidenceUrl);
 setOutput("promotion-metadata", out);
 
-console.log(`Verified Manual promotion metadata for train ${trainId} (${trainVersion}).`);
+console.log(`Verified Manual promotion metadata for compatibility line ${trainId} (${trainVersion}).`);
 
-function validateTrainManifest(manifest) {
+function validateCompatibilityMatrix(manifest) {
   rejectLegacyManifestKeys(manifest);
-  requireEquals(manifest.schema, "skenion.release-train", "manifest.schema");
+  requireEquals(manifest.schema, "skenion.compatibility-matrix", "manifest.schema");
   requireEquals(manifest["schema-version"], "0.1.0", "manifest.schema-version");
-  requireEquals(manifest["train-version"], trainVersion, "manifest.train-version");
-  requireEquals(manifest["train-id"], trainId, "manifest.train-id");
+  requireEquals(manifest["contracts-line"], trainId, "manifest.contracts-line");
+  requireEquals(manifest["contracts-range"], canonicalRangeForLine(trainId), "manifest.contracts-range");
+  requireEquals(manifest.promoted, true, "manifest.promoted");
 
-  const manualCapabilities = manifest["capability-set"]?.manual;
-  requireEquals(manualCapabilities?.["versioned-paths"], true, "capability-set.manual.versioned-paths");
-  requireEquals(manualCapabilities?.["pages-deployment"], true, "capability-set.manual.pages-deployment");
-  requireEquals(manualCapabilities?.["latest-promotion-requires-matrix"], true, "capability-set.manual.latest-promotion-requires-matrix");
-  requireEquals(manualCapabilities?.["patch-releases-use-major-minor-path"], true, "capability-set.manual.patch-releases-use-major-minor-path");
+  validateContractsPackages(manifest.components?.contracts);
+  validateSdkRange(manifest.components?.sdk);
 
   const docsManual = manifest.components?.docs?.manual;
-  requireEquals(docsManual?.version, trainVersion, "components.docs.manual.version");
+  if (!docsManual || typeof docsManual !== "object") {
+    errors.push("components.docs.manual is required for Manual Pages promotion");
+  }
+  requireManualVersionOnLine(docsManual?.version, "components.docs.manual.version");
   requireEquals(docsManual?.path, expectedManualPath, "components.docs.manual.path");
   rejectPatchSpecificManualPath(docsManual?.path, "components.docs.manual.path");
   requireEquals(docsManual?.["pages-url"], expectedPagesUrl, "components.docs.manual.pages-url");
+  requireDocsManualPromoted(docsManual);
+  requireDocsManualPagesDeployed(docsManual);
 
   const docsGate = manifest["release-gates"]?.["docs-pages-deployment"];
-  requireEquals(docsGate?.id, "docs-pages-deployment", "release-gates.docs-pages-deployment.id");
-  requireEquals(docsGate?.required, true, "release-gates.docs-pages-deployment.required");
-  requireAllowedStatus(docsGate?.status, "release-gates.docs-pages-deployment.status");
-  requireEquals(docsGate?.["manual-version"], trainVersion, "release-gates.docs-pages-deployment.manual-version");
-  requireEquals(docsGate?.["manual-path"], expectedManualPath, "release-gates.docs-pages-deployment.manual-path");
-  rejectPatchSpecificManualPath(docsGate?.["manual-path"], "release-gates.docs-pages-deployment.manual-path");
-  requireEquals(docsGate?.["pages-url"], expectedPagesUrl, "release-gates.docs-pages-deployment.pages-url");
+  if (!docsGate || typeof docsGate !== "object") {
+    errors.push("release-gates.docs-pages-deployment is required for Manual Pages promotion");
+    return;
+  }
+  requireEquals(docsGate.id, "docs-pages-deployment", "release-gates.docs-pages-deployment.id");
+  requireEquals(docsGate.required, true, "release-gates.docs-pages-deployment.required");
+  requirePassedStatus(docsGate.status, "release-gates.docs-pages-deployment.status");
+  requireManualVersionOnLine(docsGate["manual-version"], "release-gates.docs-pages-deployment.manual-version");
+  requireEquals(docsGate["manual-path"], expectedManualPath, "release-gates.docs-pages-deployment.manual-path");
+  rejectPatchSpecificManualPath(docsGate["manual-path"], "release-gates.docs-pages-deployment.manual-path");
+  requireEquals(docsGate["pages-url"], expectedPagesUrl, "release-gates.docs-pages-deployment.pages-url");
+  requireNonEmptyString(docsGate["evidence-url"], "release-gates.docs-pages-deployment.evidence-url");
 }
 
 function rejectLegacyManifestKeys(manifest) {
@@ -161,6 +186,8 @@ function rejectLegacyManifestKeys(manifest) {
     ["schemaVersion"],
     ["trainId"],
     ["trainVersion"],
+    ["train-id"],
+    ["train-version"],
     ["protocolBaselines"],
     ["capabilitySet"],
     ["capability-set", "manual", "versionedPaths"],
@@ -183,6 +210,71 @@ function rejectLegacyManifestKeys(manifest) {
   }
 }
 
+function validateContractsPackages(contracts) {
+  requirePackageVersionOnLine(contracts?.npm, "components.contracts.npm");
+  requirePackageVersionOnLine(contracts?.crate ?? contracts?.["crate-package"], "components.contracts.crate");
+}
+
+function validateSdkRange(sdk) {
+  if (!sdk) {
+    return;
+  }
+  const range = firstNonEmptyString(
+    sdk["contracts-range"],
+    sdk["supported-contracts-range"],
+    sdk.supportedContractsRange,
+    sdk.contracts?.range,
+    sdk.contracts?.["supported-range"],
+    sdk.npm?.["contracts-range"]
+  );
+  requireEquals(range, canonicalRangeForLine(trainId), "components.sdk.contracts-range");
+}
+
+function requirePackageVersionOnLine(packageRef, label) {
+  if (!packageRef || typeof packageRef !== "object") {
+    errors.push(`${label} is required in the compatibility matrix`);
+    return;
+  }
+  requireManualVersionOnLine(packageRef.version, `${label}.version`);
+}
+
+function requireManualVersionOnLine(version, label) {
+  const normalized = safeNormalizeManualVersion(version);
+  if (!normalized) {
+    errors.push(`${label} must be registry-compatible SemVer on Contracts line ${trainId}, got ${JSON.stringify(version)}`);
+    return;
+  }
+  if (normalized !== trainId) {
+    errors.push(`${label} must be inside Contracts line ${trainId}, got ${JSON.stringify(version)}`);
+  }
+}
+
+function safeNormalizeManualVersion(version) {
+  try {
+    return normalizeManualVersion(version);
+  } catch {
+    return "";
+  }
+}
+
+function canonicalRangeForLine(line) {
+  const match = /^0\.(\d+)$/.exec(String(line ?? ""));
+  if (!match) {
+    return "";
+  }
+  const minor = Number(match[1]);
+  return `>=0.${minor}.0 <0.${minor + 1}.0`;
+}
+
+function firstNonEmptyString(...values) {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim() !== "") {
+      return value.trim();
+    }
+  }
+  return "";
+}
+
 function readManifest(value, collectedErrors) {
   const text = String(value ?? "").trim();
   try {
@@ -203,10 +295,44 @@ function requireEquals(actual, expected, label) {
   }
 }
 
-function requireAllowedStatus(value, label) {
-  if (value !== "pending" && value !== "passed") {
-    errors.push(`${label} must be "pending" before Pages deployment or "passed" after deployment, got ${JSON.stringify(value)}`);
+function requirePassedStatus(value, label) {
+  if (value !== "passed") {
+    errors.push(`${label} must be "passed" for Manual Pages promotion, got ${JSON.stringify(value)}`);
   }
+}
+
+function requireDocsManualPromoted(manual) {
+  const promoted =
+    manual?.promoted === true
+    || manual?.["latest-promoted"] === true
+    || statusIsPassed(manual?.["promotion-status"])
+    || statusIsPassed(manual?.promotion?.status);
+  if (!promoted) {
+    errors.push("components.docs.manual must be promoted before Manual Pages promotion metadata is emitted");
+  }
+}
+
+function requireDocsManualPagesDeployed(manual) {
+  const deployed =
+    manual?.["pages-deployed"] === true
+    || manual?.pages?.deployed === true
+    || statusIsPassed(manual?.["pages-status"])
+    || statusIsPassed(manual?.["deployment-status"])
+    || statusIsPassed(manual?.pages?.status)
+    || statusIsPassed(manual?.deployment?.status);
+  if (!deployed) {
+    errors.push("components.docs.manual must include passed Pages deployment evidence");
+  }
+}
+
+function requireNonEmptyString(value, label) {
+  if (typeof value !== "string" || value.trim() === "") {
+    errors.push(`${label} is required`);
+  }
+}
+
+function statusIsPassed(value) {
+  return String(value ?? "").toLowerCase() === "passed";
 }
 
 function rejectPatchSpecificManualPath(value, label) {

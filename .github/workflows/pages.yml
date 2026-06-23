@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       train-version:
-        description: Lockstep train version to promote, for example 0.43.0.
+        description: Compatibility line version to promote, for example 0.45.0.
         required: true
         type: string
       manifest:
-        description: Inline final train JSON manifest, or path in manifest-repository.
+        description: Inline compatibility matrix JSON, or path in manifest-repository.
         required: true
         type: string
       manifest-ref:
-        description: Immutable manifest commit SHA.
+        description: Immutable compatibility matrix commit SHA.
         required: true
         type: string
       manifest-repository:
@@ -22,6 +22,7 @@ on:
         type: string
   repository_dispatch:
     types:
+      - skenion-compatibility-matrix-manual-promote
       - skenion-train-manual-promote
 
 permissions:
@@ -40,6 +41,8 @@ jobs:
     outputs:
       train-version: ${{ steps.resolve.outputs['train-version'] }}
       train-id: ${{ steps.resolve.outputs['train-id'] }}
+      compatibility-version: ${{ steps.resolve.outputs['compatibility-version'] }}
+      compatibility-line: ${{ steps.resolve.outputs['compatibility-line'] }}
       manifest: ${{ steps.materialize.outputs.manifest }}
       manifest-ref: ${{ steps.resolve.outputs['manifest-ref'] }}
       manifest-repository: ${{ steps.resolve.outputs['manifest-repository'] }}
@@ -55,33 +58,36 @@ jobs:
           ref: ${{ steps.resolve.outputs['manifest-ref'] }}
           path: .skenion-manifest-source
           persist-credentials: false
+          token: ${{ secrets.GH_TOKEN }}
       - id: materialize
         env:
           SKENION_MANUAL_MANIFEST: ${{ steps.resolve.outputs.manifest }}
           SKENION_MANUAL_MANIFEST_ROOT: .skenion-manifest-source
         run: node scripts/materialize-manual-promotion-manifest.mjs
 
-  validate-train:
-    name: Validate train manifest
+  validate-matrix:
+    name: Verify compatibility matrix
     needs: resolve-promotion
-    uses: skenion/skenion-ci/.github/workflows/validate-train-manifest.yml@v1
+    uses: skenion/skenion-ci/.github/workflows/verify-compatibility-matrix.yml@v2
     with:
-      manifest: ${{ needs.resolve-promotion.outputs.manifest }}
+      matrix: ${{ needs.resolve-promotion.outputs.manifest }}
       manifest-ref: ${{ needs.resolve-promotion.outputs['manifest-ref'] }}
-      train-version: ${{ needs.resolve-promotion.outputs['train-version'] }}
-      mode: verify
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   build:
     name: Build Manual artifact
     runs-on: ubuntu-latest
     needs:
       - resolve-promotion
-      - validate-train
+      - validate-matrix
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-      SKENION_MANUAL_TRAIN_VERSION: ${{ needs.validate-train.outputs['train-version'] }}
-      SKENION_MANUAL_TRAIN_ID: ${{ needs.validate-train.outputs['train-id'] }}
+      SKENION_MANUAL_TRAIN_VERSION: ${{ needs.resolve-promotion.outputs['train-version'] }}
+      SKENION_MANUAL_TRAIN_ID: ${{ needs.resolve-promotion.outputs['train-id'] }}
       SKENION_MANUAL_TRAIN_MANIFEST: ${{ needs.resolve-promotion.outputs.manifest }}
+      SKENION_MANUAL_COMPATIBILITY_VERSION: ${{ needs.resolve-promotion.outputs['compatibility-version'] }}
+      SKENION_MANUAL_COMPATIBILITY_MATRIX: ${{ needs.resolve-promotion.outputs.manifest }}
       SKENION_MANUAL_MANIFEST_REF: ${{ needs.resolve-promotion.outputs['manifest-ref'] }}
     steps:
       - uses: actions/checkout@v6

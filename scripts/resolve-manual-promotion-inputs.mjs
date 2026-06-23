@@ -15,14 +15,16 @@ const inputs = event.inputs ?? {};
 const payload = event.client_payload ?? {};
 
 const trainVersion = firstString(
+  inputs["compatibility-version"],
+  payload["compatibility-version"],
   inputs["train-version"],
   payload["train-version"]
 );
 const manifest = firstManifest(
+  inputs["compatibility-matrix"],
+  payload["compatibility-matrix"],
   inputs.manifest,
-  inputs["release-train-manifest"],
-  payload.manifest,
-  payload["release-train-manifest"]
+  payload.manifest
 );
 const manifestRef = firstString(
   inputs["manifest-ref"],
@@ -34,6 +36,7 @@ const manifestRepository = firstString(
 ) || "skenion/skenion";
 const legacyKeys = presentLegacyKeys(inputs, "inputs", [
   "train_version",
+  "release-train-manifest",
   "manifest_ref",
   "manifest_repository"
 ]).concat(presentLegacyKeys(payload, "client_payload", [
@@ -44,6 +47,7 @@ const legacyKeys = presentLegacyKeys(inputs, "inputs", [
   "version",
   "trainManifest",
   "releaseTrainManifest",
+  "release-train-manifest",
   "manifestRef",
   "manifest_ref",
   "manifestRepository",
@@ -55,7 +59,7 @@ const manifestIsInline = isInlineJson(manifest);
 
 if (legacyKeys.length) {
   fail(
-    `Manual promotion accepts current kebab-case event keys only; replace ${legacyKeys.join(", ")} with train-version, manifest or release-train-manifest, manifest-ref, and manifest-repository.`
+    `Manual promotion accepts current kebab-case event keys only; replace ${legacyKeys.join(", ")} with compatibility-version or train-version, compatibility-matrix or manifest, manifest-ref, and manifest-repository.`
   );
 }
 
@@ -63,16 +67,16 @@ if (eventName !== "workflow_dispatch" && eventName !== "repository_dispatch") {
   fail(`Manual promotion must run from workflow_dispatch or repository_dispatch, got "${eventName}".`);
 }
 if (!trainVersion) {
-  fail("Manual promotion requires a train-version input or client payload.");
+  fail("Manual promotion requires a compatibility-version or train-version input or client payload.");
 }
 if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(trainVersion)) {
-  fail(`Manual promotion train version must be registry-compatible SemVer, got "${trainVersion}".`);
+  fail(`Manual promotion compatibility version must be registry-compatible SemVer, got "${trainVersion}".`);
 }
 if (!manifest) {
-  fail("Manual promotion requires a release train manifest path or inline JSON manifest.");
+  fail("Manual promotion requires a compatibility matrix path or inline JSON manifest.");
 }
 if (!manifestRef) {
-  fail("Manual promotion requires manifest-ref to identify the immutable train manifest commit.");
+  fail("Manual promotion requires manifest-ref to identify the immutable compatibility matrix commit.");
 }
 if (!/^[0-9a-f]{40}$/i.test(manifestRef)) {
   fail(`Manual promotion manifest-ref must be a 40-character commit SHA, got "${manifestRef}".`);
@@ -83,17 +87,20 @@ if (!manifestIsInline && !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(manifestRepo
 
 const trainId = normalizeManualVersion(trainVersion);
 if (trainId === "latest") {
-  fail(`Manual promotion train version "${trainVersion}" did not resolve to a major/minor Manual track.`);
+  fail(`Manual promotion compatibility version "${trainVersion}" did not resolve to a major/minor Manual track.`);
 }
 
 setOutput("train-version", trainVersion);
 setOutput("train-id", trainId);
+setOutput("compatibility-version", trainVersion);
+setOutput("compatibility-line", trainId);
 setOutput("manifest", manifest);
+setOutput("compatibility-matrix", manifest);
 setOutput("manifest-ref", manifestRef);
 setOutput("manifest-repository", manifestRepository);
 setOutput("manifest-is-inline", manifestIsInline ? "true" : "false");
 
-console.log(`Resolved Manual promotion for train ${trainId} (${trainVersion}).`);
+console.log(`Resolved Manual promotion for compatibility line ${trainId} (${trainVersion}).`);
 
 function firstString(...values) {
   for (const value of values) {
