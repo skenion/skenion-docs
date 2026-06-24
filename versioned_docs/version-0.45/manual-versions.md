@@ -22,7 +22,8 @@ minor Manual surface.
 Pull requests and ordinary `main` builds may validate Manual content, but they
 do not promote the latest published Manual by themselves. Latest Manual and
 GitHub Pages promotion happens only from a compatibility matrix promotion that
-carries or references a verified `skenion.compatibility-matrix` document.
+carries or references a verified `skenion.compatibility-matrix` evidence
+document.
 
 The active compatibility target is Contracts line `0.45`. A compatibility
 matrix for that line records `contracts-line: "0.45"`, the canonical
@@ -37,13 +38,15 @@ frozen major/minor paths.
 ## Artifact Verification
 
 Manual deployment is one compatibility-matrix promotion gate. The matrix also
-names the registry packages, Runtime binary assets, Studio desktop packages,
-Runtime sidecars, examples conformance evidence, checksums, and Pages URL that
-were verified together.
+names the registry packages, Runtime release manifests, Runtime DSUB S3 binary
+artifacts, Studio release indexes, Studio DSUB S3 web and desktop artifacts,
+examples conformance evidence, checksums, and Pages URL that were verified
+together.
 
 A compatibility matrix is not promoted just because the docs build succeeds. It
-is promoted only after the matrix verifier confirms the expected artifacts and
-the GitHub Pages deployment for the normalized Manual path has succeeded.
+is promoted only after release evidence confirms the expected repository-owned
+artifacts and the GitHub Pages deployment for the normalized Manual path has
+succeeded.
 
 ## Strict v0 Version Policy
 
@@ -71,9 +74,13 @@ Before a v0 matrix is promoted, verification must cover these surfaces:
 - `@skenion/contracts` and the `skenion-contracts` Rust crate inside the
   declared Contracts line.
 - `@skenion/sdk`, when listed, with the declared supported Contracts range.
-- Runtime OS/arch GitHub Release binary assets, sidecars, checksums, and
-  smoke-test evidence.
-- Studio web deployment artifacts and desktop GitHub Release packages.
+- Runtime GitHub Release target manifests, DSUB S3 Runtime OS/arch artifacts,
+  checksums, Contracts evidence, and smoke-test evidence.
+- Studio GitHub Release web index, DSUB S3 Studio web bundle and checksum,
+  per-target desktop indexes, DSUB S3 desktop packages and checksums, and
+  signing or notarization status where available.
+- Studio local-managed Runtime staging evidence that uses Runtime release
+  manifests instead of Studio-owned Runtime sidecar release assets.
 - skenion examples conformance evidence, fixture tag, or recorded commit.
 - Manual metadata, Pages deployment evidence, and the deployed major/minor
   Manual path.
@@ -83,9 +90,10 @@ exact component artifacts. For example, a `0.45.1` Manual patch release still
 publishes Manual content under `/manual/0.45/`, while the matrix identifies the
 exact component artifact versions and evidence that were promoted.
 
-See [Compatibility Matrix And Install Artifacts](release-train-install.md) for
-the compatibility matrix, Runtime standalone binaries, Studio desktop packages,
-sidecar requirements, promotion gates, and updater status.
+See [Release Evidence And Install Artifacts](release-train-install.md) for the
+compatibility matrix evidence, Runtime standalone binaries, Studio web and
+desktop artifacts, Runtime manifest staging, promotion gates, and updater
+status.
 
 ## No Broad Version Promises
 
