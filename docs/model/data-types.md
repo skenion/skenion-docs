@@ -117,8 +117,10 @@ The shorthand is an authoring convenience only. It is not a separate data type.
 
 ## Structured Array Types
 
-Structured array value types describe dense numeric payload shape, not the
-delivery model. A tensor can arrive once, arrive repeatedly, be stored, be
+Structured array value types describe dense numeric value identity, not the
+delivery model. Their concrete representation, shape, layout, color space,
+sample rate, and resource-handle policy belong to the Runtime value binding's
+`ValueFormat`. A tensor can arrive once, arrive repeatedly, be stored, be
 sampled, or be rendered according to endpoint policy. Its type does not mean
 "image", "video", "audio", "stream", "event", or "render tick".
 
@@ -140,9 +142,10 @@ occurrence triggered a capture, that is still one occurrence of
 `value.core.tensor`.
 
 Do not encode media storage format in the value type id. Shape and
-representation belong in typed metadata. Runtime may store a tensor as a flat
-vector internally, but the public contract must preserve shape and format
-metadata so endpoints can validate compatibility.
+representation belong in `ValueFormat` metadata announced by Runtime for the
+live binding. Runtime may store a tensor as a flat vector internally, but the
+public contract must preserve shape and format metadata so endpoints can
+validate compatibility.
 
 First-party structured array metadata must be explicit:
 

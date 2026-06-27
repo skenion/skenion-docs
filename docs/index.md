@@ -19,6 +19,7 @@ For the base model, read:
 
 - [Data Types](model/data-types.md)
 - [Value Occurrences](model/value-occurrences.md)
+- [Runtime Value Bindings](model/runtime-value-bindings.md)
 - [Interface Endpoints](model/interface-endpoints.md)
 - [Connections](model/connections.md)
 - [Objects](model/objects.md)

@@ -27,6 +27,8 @@ without carrying another value.
 - Repetition changes runtime scheduling, not value identity.
 - A single occurrence can be enough to trigger rendering, state update,
   message dispatch, or no output at all, depending on the object.
+- High-throughput occurrences should reference Runtime-announced binding
+  metadata instead of repeating full shape, layout, or media metadata.
 
 This means a `value.core.bool` occurrence can be used for one-shot behavior if
 the object endpoint declares that reaction. It does not need a separate
@@ -67,6 +69,20 @@ not deliver that occurrence to the object implementation. Runtime must record a
 structured diagnostic and drop the occurrence. A malformed occurrence must not
 panic Runtime, poison the session, stop the graph, or become a Studio-owned
 semantic rule.
+
+## Runtime Binding Metadata
+
+During execution, Runtime may deliver occurrences with a compact header that
+references a live value binding. That header identifies the binding, binding
+epoch, value format revision, sequence, clock, timestamp, and payload kind.
+
+The full shape and representation metadata for arrays, audio blocks, image
+frames, video frames, render frames, or GPU resources lives in the binding's
+announced `ValueFormat`. Occurrences reference that metadata through
+`formatRevision`; they do not repeat the full format each time.
+
+See [Runtime Value Bindings](runtime-value-bindings.md) for the binding-scoped
+format and revision model.
 
 ## Diagnostics
 
