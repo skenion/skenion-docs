@@ -57,7 +57,7 @@ reaction behavior. It must not introduce `event.*`, `frame.*`, `stream.*`,
 Runtime validates connection operations before accepting an edge. Runtime also
 guards each delivered occurrence before invoking the target object. If the
 occurrence does not satisfy the endpoint's accepted value policy, Runtime must
-drop that occurrence and record a structured diagnostic. Studio must not
+drop that occurrence and record a structured issue. Studio must not
 reinterpret that failed delivery as a different type rule.
 
 ## Runtime Authority
@@ -65,7 +65,7 @@ reinterpret that failed delivery as a different type rule.
 Runtime is the final authority for endpoint compatibility. Studio may prevent
 obvious invalid operations for a better editing experience, but Studio must
 submit connection and mutation requests to Runtime and honor Runtime
-diagnostics.
+issues.
 
 This is required for collaboration. Multiple Studio clients can edit the same
 Runtime-owned graph. A local UI cache cannot be the source of truth for whether

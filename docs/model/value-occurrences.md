@@ -66,7 +66,7 @@ execution time.
 
 If an occurrence does not satisfy the receiving endpoint policy, Runtime must
 not deliver that occurrence to the object implementation. Runtime must record a
-structured diagnostic and drop the occurrence. A malformed occurrence must not
+structured issue and drop the occurrence. A malformed occurrence must not
 panic Runtime, poison the session, stop the graph, or become a Studio-owned
 semantic rule.
 
@@ -84,9 +84,9 @@ announced `ValueFormat`. Occurrences reference that metadata through
 See [Runtime Value Bindings](runtime-value-bindings.md) for the binding-scoped
 format and revision model.
 
-## Diagnostics
+## Issues
 
 If Runtime rejects an operation involving an occurrence, it should report the
 object id, endpoint id, offered value type, accepted value policy, and a stable
-diagnostic code. Studio should display that diagnostic without converting the
+issue code. Studio should display that issue without converting the
 failure into a different semantic rule.

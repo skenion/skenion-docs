@@ -11,7 +11,7 @@ occurrences, interface endpoints, and connections.
 This split is mandatory. A value is not an object. A data type is not a node.
 Delivery frequency is not a data type. Studio may present editing helpers, but
 Runtime remains the authority for live object resolution, compatibility checks,
-operation acceptance, and diagnostics.
+operation acceptance, and issues.
 
 ## Model Layers
 
@@ -22,7 +22,7 @@ operation acceptance, and diagnostics.
 | Interface endpoint | An inlet or outlet on an object. | Runtime validates endpoint compatibility from object/provider definitions. |
 | Connection | A route from one output endpoint to one input endpoint. | Runtime accepts or rejects connection operations. |
 | Object | Executable behavior with endpoints and state. | Runtime and provider registries own object definitions and execution. |
-| Studio | Editing and diagnostic UX. | Studio asks Runtime to mutate or validate, then displays the result. |
+| Studio | Editing and issue UX. | Studio asks Runtime to mutate or validate, then displays the result. |
 | SDK | Authoring support. | SDK helps authors describe packages and objects without redefining Runtime semantics. |
 
 ## Reading Order

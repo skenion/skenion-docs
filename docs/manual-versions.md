@@ -53,7 +53,7 @@ succeeded.
 skenion v0 treats version fields as exact current-version discriminators, not
 as compatibility ranges. A graph, project, node, operation, extension package,
 Runtime HTTP request, manifest, protocol payload, or Manual metadata record that
-declares an unsupported version is rejected with a structured diagnostic before
+declares an unsupported version is rejected with a structured issue before
 authoring, validation, planning, execution, package installation, or help
 rendering continues.
 

@@ -7,7 +7,7 @@ sidebar_position: 4
 
 Operator nodes are object nodes that compute from input occurrences and emit a
 result. Runtime owns their object spec parsing, argument defaults, endpoint
-interfaces, and diagnostics.
+interfaces, and issues.
 
 ## Runtime-Backed Now
 

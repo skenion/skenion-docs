@@ -149,7 +149,7 @@ Resolution rules:
    remains ambiguous until the user chooses one.
 4. If no active provider exposes the spec or alias, the object remains
    unresolved.
-5. Runtime returns structured `objectResolution` diagnostics for unresolved or
+5. Runtime returns structured `objectResolution` issues for unresolved or
    ambiguous resolution.
 
 Studio may preserve the user's original text as `objectSpec` for editing:
@@ -184,9 +184,9 @@ Typical Studio flow:
 4. If resolution succeeds, Runtime creates or updates the object instance in
    the session and returns the accepted external interface: implementation,
    object spec, inlet/outlet ids, labels, accepted/emitted value policies,
-   defaults, descriptions, and diagnostics.
+   defaults, descriptions, and issues.
 5. If resolution fails, Runtime returns an unresolved or ambiguous object state
-   with diagnostics instead of pretending that the object exists.
+   with issues instead of pretending that the object exists.
 6. Studio renders that Runtime result. It does not create a successful `+~`
    object from its own registry.
 
@@ -231,7 +231,7 @@ provider metadata. They must not be flattened into a canonical id such as
 `object.publisher.package.filter.lowpass`.
 
 This keeps object specs usable while preserving deterministic loads and clear
-provider diagnostics:
+provider issues:
 
 - users type object specs
 - Runtime resolves against active providers

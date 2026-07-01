@@ -25,7 +25,7 @@ Some audio ids may exist in Studio reference/help material but are not currently
 accepted by the live Runtime object spec resolver. Examples include additional
 audio operators, oscillators, resampling, clock bridging, and analysis helpers.
 Until Runtime publishes them through its registry, Studio must display them only
-as reference/help content or diagnostic states, not as accepted live objects.
+as reference/help content or issue states, not as accepted live objects.
 
 ## Timing And Value Identity
 

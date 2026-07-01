@@ -14,8 +14,8 @@ GET /v0/sessions/{sessionId}
 `GET /v0/sessions/{sessionId}` is the Studio live-session primary path. Studio
 attaches here for the Runtime-owned session snapshot, replay/resume cursors,
 node catalog hydration, graph commands, acknowledgements, applied events, and
-diagnostics. An ordinary HTTP request to this endpoint is rejected with an
-upgrade-required diagnostic. Clients must send a WebSocket Upgrade request.
+issues. An ordinary HTTP request to this endpoint is rejected with an
+upgrade-required issue. Clients must send a WebSocket Upgrade request.
 
 ## Envelope
 
@@ -53,7 +53,7 @@ Runtime answers with one of:
 - `session.attached`, including connection identity, `resumeToken`,
   `globalCursor`, current revisions, and a session snapshot.
 - `session.syncRequired`, including the same current session data plus a
-  diagnostic explaining why replay or resume could not be satisfied.
+  issue explaining why replay or resume could not be satisfied.
 
 If `lastCursor` is within the retained event window, Runtime sends
 `session.attached` and then replays missed events after that cursor. If the
@@ -64,7 +64,7 @@ incarnation, Runtime sends `session.syncRequired`.
 
 Studio hydrates live node catalog data through the attached WebSocket session.
 That path is the live-session authority because it shares the same Runtime
-session identity, current revisions, diagnostics, and replay/resume boundary as
+session identity, current revisions, issues, and replay/resume boundary as
 graph commands.
 
 Runtime also exposes an independent HTTP snapshot endpoint:
@@ -81,7 +81,7 @@ by an active WebSocket session.
 
 Runtime owns node catalog authority: active providers, object resolution,
 accepted node interfaces, endpoint policies, catalog-visible metadata, and
-diagnostics. Studio renders catalog data and dispatches node commands; it does
+issues. Studio renders catalog data and dispatches node commands; it does
 not own the object inventory or locally materialize accepted live nodes.
 
 Contracts owns the shared DTO shape for catalog payloads that Runtime and
@@ -91,7 +91,7 @@ Runtime resolution behavior, or WebSocket framing.
 `catalogRevision` is a provider/interface/catalog-visible metadata revision. It
 changes when available providers change, when a patch or provider exposes a
 different node interface, or when catalog-visible labels, descriptions,
-primary specs, aliases, endpoint metadata, or diagnostics change. Ordinary graph wiring, node
+primary specs, aliases, endpoint metadata, or issues change. Ordinary graph wiring, node
 movement, transient `node.input`, and ordinary node parameter edits are graph or
 runtime state changes; they do not invalidate the catalog unless they also
 change the provider/interface/catalog-visible metadata surface.
@@ -113,7 +113,7 @@ The stale object-prefixed command names are unsupported in v0.
 Runtime replies to accepted command frames with `graph.ack`. When a command
 changes persisted graph state, Runtime also emits `graph.applied` to attached
 clients. `graph.applied` includes the accepted command kind, target, revisions,
-diagnostics, node result, and event cursor.
+issues, node result, and event cursor.
 
 `node.input` is not a persisted graph mutation. It sends transient input to an
 existing node endpoint. A successful `node.input` is observed as
@@ -126,9 +126,9 @@ client, window, frame type, and idempotency key. A duplicate command returns the
 cached acknowledgement and any local replay result rather than applying the
 operation a second time.
 
-## Diagnostics
+## Issues
 
 Protocol errors are returned as Runtime realtime error frames with structured
-diagnostics. Node and graph operation failures remain scoped to the command
+issues. Node and graph operation failures remain scoped to the command
 result whenever possible, so Studio can render the problem on the affected node
 instead of replacing the whole graph view.

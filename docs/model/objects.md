@@ -10,13 +10,13 @@ Runtime-owned semantics.
 
 In the Manual, a node is the graph instance the user places and wires. An
 object is the user-facing authoring unit: the user types an `objectSpec`, sees
-the accepted interface, connects endpoints, and repairs diagnostics. Execution
+the accepted interface, connects endpoints, and repairs issues. Execution
 decisions belong to Runtime and providers.
 For the node-family catalog, see [Nodes](../nodes/index.md).
 
 `objectSpec` is the typed source text for an object, such as `osc~ 440`,
 `+`, `message hello`, or a package-provided object name. Runtime may preserve it
-for editing and diagnostics, but `objectSpec` is not authority for whether the
+for editing and issues, but `objectSpec` is not authority for whether the
 object exists, which interface it exposes, or how it executes.
 
 Runtime is the object and node authority. Studio sends node operation requests
@@ -48,7 +48,7 @@ Runtime must be able to answer:
 - which endpoints it exposes
 - which value policies those endpoints accept or emit
 - whether the requested operation is accepted
-- which diagnostic explains rejection
+- which issue explains rejection
 
 For a resolved object, Studio receives the accepted object interface, not the
 implementation. That interface is enough to draw the box, draw inlets and
@@ -59,11 +59,11 @@ The executable implementation remains inside Runtime or the provider package.
 Alias collisions, unresolved names, ambiguous provider matches, stale
 providers, and invalid object specs are user-facing display states. Runtime
 should preserve the user-facing `objectSpec` when possible and return a
-structured `objectResolution` diagnostic. Studio should render the Runtime
+structured `objectResolution` issue. Studio should render the Runtime
 result as an unresolved or ambiguous object instead of deleting the user's
 input, silently choosing a provider, or pretending that the object exists. A
 normal Studio presentation is an object with an error outline using the design
-system's error color, plus the Runtime diagnostic in the inspector/log surface.
+system's error color, plus the Runtime issue in the inspector/log surface.
 
 For the conceptual Runtime command boundary, see
 [Runtime Node Commands](runtime-node-commands.md). For the WebSocket frame
@@ -98,4 +98,4 @@ behavior.
 
 This boundary keeps custom objects and first-party objects on the same runtime
 path: both provide definitions, both are validated by Runtime, and both report
-diagnostics through the same channels.
+issues through the same channels.

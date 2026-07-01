@@ -14,7 +14,7 @@ const manualSidebar = [
       "nodes/audio",
       "nodes/patch-boundaries",
       "nodes/render-media",
-      "nodes/annotations-and-diagnostics"
+      "nodes/annotations-and-issues"
     ]
   },
   {

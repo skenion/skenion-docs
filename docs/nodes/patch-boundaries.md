@@ -24,7 +24,7 @@ node interface to Studio.
 
 When a patch boundary changes, Runtime owns the resulting node interface and
 incident edge policy. If a removed inlet or outlet invalidates existing edges,
-Runtime reports the dropped or invalid edges through diagnostics and applied
+Runtime reports the dropped or invalid edges through issues and applied
 graph state. Studio renders that result; it does not silently keep stale wires.
 
 ## Help Patches

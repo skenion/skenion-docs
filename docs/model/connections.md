@@ -21,7 +21,7 @@ registry satisfy these checks:
 5. The output value policy is compatible with the input accepted value policy.
 6. Fan-in, fan-out, and duplicate connection rules allow the edge.
 
-If any check fails, Runtime rejects the operation with a structured diagnostic.
+If any check fails, Runtime rejects the operation with a structured issue.
 Studio displays the rejection and leaves the graph in the accepted Runtime
 state.
 
@@ -32,7 +32,7 @@ External packages, SDK-authored objects, stale graphs, and collaborative races
 can still produce malformed value occurrences after an edge was accepted.
 
 When that happens, Runtime must reject delivery at the target input, record a
-structured diagnostic, and drop the malformed occurrence. The object
+structured issue, and drop the malformed occurrence. The object
 implementation must not receive a value that violates its endpoint policy, and
 Studio must not invent a fallback interpretation.
 
@@ -47,7 +47,7 @@ operation policy.
 
 The important rule is that one invalid object or edge must not make the entire
 editing surface disappear. Runtime can reject execution or connection
-operations while Studio still shows the patch and the diagnostics needed to fix
+operations while Studio still shows the patch and the issues needed to fix
 it.
 
 ## Interface Changes

@@ -27,7 +27,7 @@ For the base model, read:
 
 For graph authoring surfaces, read [Nodes](nodes/index.md). It explains
 objects, control and message nodes, operators, audio nodes, patch boundaries,
-render/media nodes, and diagnostic nodes. The node pages distinguish
+render/media nodes, and issue nodes. The node pages distinguish
 Runtime-backed object authoring from Studio reference/help entries that still
 need Runtime registry alignment.
 

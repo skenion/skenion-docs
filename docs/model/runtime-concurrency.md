@@ -22,12 +22,12 @@ The intended policy is:
 | Different sessions | May run concurrently when they do not share mutable state. |
 | Same-session graph mutation | Ordered and serialized by Runtime. |
 | Same-session replay/resume | Ordered by Runtime cursor and retained event window. |
-| `node.input` | Low-latency transient path, still validated and ordered by Runtime diagnostics and event emission. |
+| `node.input` | Low-latency transient path, still validated and ordered by Runtime issues and event emission. |
 | Read-only status and metadata | May be served concurrently when it does not mutate session state. |
 
 Studio should assume Runtime is the arbiter. If two clients edit the same
 session, Studio sends commands and renders `graph.ack`, `graph.applied`,
-`control.emitted`, or diagnostics from Runtime. Studio should not merge live
+`control.emitted`, or issues from Runtime. Studio should not merge live
 graph state locally as if it owned the mutation order.
 
 ## Non-Blocking Work
@@ -44,7 +44,7 @@ Examples:
 - expensive validation or compilation
 - network calls made by SDK or package code
 
-Those jobs should report structured progress, diagnostics, cancellation or
+Those jobs should report structured progress, issues, cancellation or
 failure, and final applied state through Runtime-owned channels. A blocking
 package or object must not freeze unrelated realtime session traffic.
 
@@ -53,5 +53,5 @@ package or object must not freeze unrelated realtime session traffic.
 Parallel server capacity is not a license to apply same-session graph edits out
 of order. A fast UI action can be optimistic only as presentation. Runtime still
 decides whether the command applies, which revision wins, which edges remain,
-and which diagnostics Studio must show.
+and which issues Studio must show.
 

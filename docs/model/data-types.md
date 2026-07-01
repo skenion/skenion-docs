@@ -73,7 +73,7 @@ contracts.
 
 UI text may display a short label such as `float`, `int`, or `uint` when the
 endpoint contract makes the width obvious. Persisted graph data, package
-manifests, Runtime diagnostics, and SDK definitions must use the explicit type
+manifests, Runtime issues, and SDK definitions must use the explicit type
 id.
 
 `ufloat*` types are constrained floating point value types. They use the same
@@ -87,7 +87,7 @@ invent a new ambiguous type id for each range.
 ## Serialization Boundary
 
 The type id is contract metadata. It is serialized as a stable string in graph
-documents, package/provider definitions, Runtime API payloads, diagnostics, and
+documents, package/provider definitions, Runtime API payloads, issues, and
 SDK-authored definitions.
 
 The value payload is serialized according to the value type. Numeric, boolean,
@@ -187,7 +187,7 @@ Custom value types must not use the `value.core.*` or `value.media.*`
 namespaces. They must use a provider-owned namespace and be declared by the
 package or provider that owns the type. Runtime must reject documents,
 packages, object definitions, or connection operations that reference unknown
-value type ids, and Studio must show the Runtime diagnostic instead of guessing
+value type ids, and Studio must show the Runtime issue instead of guessing
 a fallback type.
 
 ## Bang

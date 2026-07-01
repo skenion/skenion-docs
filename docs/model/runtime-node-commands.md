@@ -20,7 +20,7 @@ The Runtime-owned node catalog is the read model that lets Studio show
 available nodes before it sends commands. Studio renders that catalog and
 dispatches node operation requests, but Runtime remains the authority for active
 providers, available objects, accepted interfaces, endpoint policy, and
-diagnostics.
+issues.
 
 ## Command Kinds
 
@@ -44,12 +44,12 @@ definition.
 
 `node.resolve` asks Runtime to resolve `objectSpec` or a structured
 implementation reference in the selected graph context. It returns the
-resolution result, accepted interface data when available, and diagnostics for
+resolution result, accepted interface data when available, and issues for
 unresolved or ambiguous input. It does not make Studio an object registry.
 
 `node.create` asks Runtime to create a persisted graph node. Runtime performs
 registry lookup, resolution, materialization, id assignment, endpoint policy
-checks, and diagnostics before it reports the applied node state.
+checks, and issues before it reports the applied node state.
 
 `node.replace` asks Runtime to replace the object/interface behind an existing
 node. Runtime decides whether node identity can be preserved, which endpoint
@@ -57,7 +57,7 @@ interface is accepted, which existing edges remain valid, and which edges or
 state must be removed or reported.
 
 `node.delete` asks Runtime to remove a graph node. Runtime owns the deletion
-policy, edge cleanup, runtime teardown, diagnostics, and resulting applied graph
+policy, edge cleanup, runtime teardown, issues, and resulting applied graph
 state.
 
 `node.update` asks Runtime to mutate persisted graph or node parameters. It is a
@@ -76,11 +76,11 @@ Do not use `node.input` for saved parameter mutation, and do not use
 Runtime owns the WebSocket envelope and realtime command transport. Runtime also
 owns ACK/applied framing, idempotency handling, session and graph routing,
 supported-kind negotiation, registry lookup, object materialization, endpoint
-and edge policy, diagnostics, and applied-state events.
+and edge policy, issues, and applied-state events.
 
 An ACK only speaks for command receipt or protocol acceptance. The applied
 result is the Runtime-owned answer about whether graph or runtime state changed,
-which node interface is now authoritative, and which diagnostics Studio should
+which node interface is now authoritative, and which issues Studio should
 render.
 
 Studio sends node operation requests and renders Runtime results. Studio may

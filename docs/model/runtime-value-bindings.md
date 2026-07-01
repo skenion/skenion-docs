@@ -71,7 +71,7 @@ Examples:
 
 Each occurrence carries the current `formatRevision`. If Runtime or a receiver
 sees an unknown or stale revision, it must fail closed: request or wait for the
-format announcement, drop the occurrence, and record a structured diagnostic.
+format announcement, drop the occurrence, and record a structured issue.
 It must not reinterpret old bytes under the new format.
 
 ## Format Digest
@@ -80,7 +80,7 @@ The format announcement should also carry a `formatDigest`, computed from the
 canonical `ValueFormat` content.
 
 `formatRevision` is the hot-path sequencing key. `formatDigest` is for
-deduplication, cache reuse, diagnostics, late join validation, and
+deduplication, cache reuse, issues, late join validation, and
 cross-process equivalence. The digest does not replace the revision, because a
 later reconfiguration can intentionally return to a byte-identical format while
 still needing new sequencing semantics.
@@ -115,7 +115,7 @@ file IO, or reconfigure buffers directly.
 Format changes that affect an audio callback must prepare immutable runtime
 state off the callback path, then switch at a safe block boundary with a new
 binding epoch or format revision. Unknown format revisions should produce
-silence/drop behavior plus diagnostics rather than invoking object code with
+silence/drop behavior plus issues rather than invoking object code with
 unknown layout.
 
 Audio-rate scalar samples are still `value.core.float32` occurrences. Runtime
@@ -139,7 +139,7 @@ project document.
 Contracts may define reusable value format and occurrence header shapes.
 Runtime owns the concrete realtime command and event protocol, session attach
 and resume behavior, replay window, delivery policy, object invocation, stale
-revision handling, and diagnostics.
+revision handling, and issues.
 
-Studio displays Runtime state and diagnostics. Studio must not become the
+Studio displays Runtime state and issues. Studio must not become the
 semantic authority for whether an occurrence can be delivered.

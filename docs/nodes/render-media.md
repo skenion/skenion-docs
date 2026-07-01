@@ -17,7 +17,7 @@ and video decode. These entries document intended UI and help behavior, but the
 live Runtime object spec resolver must publish and accept an object before
 Studio treats it as a live Runtime-backed object.
 
-Until that alignment is complete, Studio should surface Runtime diagnostics for
+Until that alignment is complete, Studio should surface Runtime issues for
 unresolved render or media object spec instead of using local reference data as
 execution authority.
 
