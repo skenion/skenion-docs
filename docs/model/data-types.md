@@ -11,7 +11,7 @@ will consume it.
 
 Data types are shared contract vocabulary. Runtime uses them for endpoint
 compatibility. Studio displays them and may preflight obvious mistakes, but
-Studio must not become the semantic authority for type acceptance.
+the semantic decision for type acceptance belongs to Runtime.
 
 ## Type Identifier Shape
 
@@ -103,7 +103,7 @@ the same endpoint value-type contract.
 
 ## Default Numeric Widths
 
-When an object text or UI control needs a default numeric type, use these
+When an object spec or UI control needs a default numeric type, use these
 defaults unless the object definition says otherwise:
 
 | User-facing shorthand | Persisted type |
@@ -235,9 +235,9 @@ rendered.
 `value.core.string`.
 
 Do not use generic `asset`, `resource`, `ref`, or `handle` type ids as a
-shortcut. Interpreting that string is the responsibility of the object or a
-Runtime utility used by that object. Loading, caching, decoding, or rejecting
-it is behavior, not data type identity.
+stand-in for behavior. Interpreting that string is the responsibility of the
+object or a Runtime utility used by that object. Loading, caching, decoding, or
+rejecting it is behavior, not data type identity.
 
 ## Compatibility
 
@@ -257,15 +257,15 @@ Examples:
 
 | Value type | Related object, when one exists |
 | --- | --- |
-| `value.core.float64` | `object.core.float` |
-| `value.core.bang` | `object.core.bang` |
-| `value.core.message` | `object.core.message` |
+| `value.core.float64` | `float` |
+| `value.core.bang` | `bang` |
+| `value.core.message` | `message` |
 
 This relationship is not automatic. `value.core.bool` and `value.core.string`
-are valid value types, but there is no default `object.core.bool` or
-`object.core.string` just because those values exist. An object may display,
-store, emit, or transform those values, but the object identity must be defined
-by the Runtime or provider registry.
+are valid value types, but there is no default bool or string object just
+because those values exist. An object may display, store, emit, or transform
+those values, but the object identity must be defined by the Runtime or provider
+registry.
 
-See [Object Identity And Shortcuts](object-identity-and-shortcuts.md) for the
-canonical object id and shortcut rules.
+See [Object Identity And Specs](object-identity-and-specs.md) for object
+implementation identity and `objectSpec` rules.

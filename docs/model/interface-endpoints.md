@@ -64,7 +64,8 @@ reinterpret that failed delivery as a different type rule.
 
 Runtime is the final authority for endpoint compatibility. Studio may prevent
 obvious invalid operations for a better editing experience, but Studio must
-submit connection and mutation intent to Runtime and honor Runtime diagnostics.
+submit connection and mutation requests to Runtime and honor Runtime
+diagnostics.
 
 This is required for collaboration. Multiple Studio clients can edit the same
 Runtime-owned graph. A local UI cache cannot be the source of truth for whether
