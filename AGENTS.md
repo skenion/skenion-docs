@@ -38,13 +38,22 @@ GitHub Pages deployment for the normalized major/minor path.
 Skenion v0 releases are coordinated by verified compatibility matrices, not by
 one shared product SemVer across every component. Component repositories use their
 natural Release Please versions; the hub promotes a matrix that declares the
-Contracts line, supported Contracts range, component artifact versions,
-Runtime/Studio assets, examples conformance, and Manual Pages evidence.
+supported Contracts range, component artifact versions, Runtime/Studio assets,
+examples conformance, and Manual Pages evidence.
 
-A Contracts compatibility line such as `0.45` means `>=0.45.0 <0.46.0`.
-Patch releases inside that line are compatible. Graph, project, extension,
-Runtime HTTP, manifest, and protocol discriminator fields remain exact
-current-version checks and should not be described as SemVer ranges.
+During v0, component-owned supported Contracts ranges may be intentionally broad
+such as `>=0.0.0 <1.0.0`. Docs should describe the range advertised by the
+component or promoted matrix being documented, not infer an exact minor line.
+Graph, project, extension, Runtime HTTP, manifest, and protocol discriminator
+fields remain exact current-version checks and should not be described as SemVer
+ranges.
+
+Docs CI must not hardcode a Contracts version or supported range as a separate
+compatibility authority. Manual builds should validate
+documentation structure and any consumed generated artifacts, while release or
+promotion evidence must come from the checked-in matrix/component metadata
+being documented. Do not make docs workflows decide which Contracts range
+Runtime, SDK, Studio, or Examples support.
 
 All release-state and Manual promotion writes must happen inside GitHub Actions.
 Do not create, edit, delete, promote, demote, or repair GitHub Releases, release
